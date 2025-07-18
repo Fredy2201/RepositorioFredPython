@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Clientes</h1>
+    <form method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ registro[1] }}" required>
+
+        <label for="whatsapp">Whatsapp:</label>
+        <input type="text" id="whatsapp" name="whatsapp" value="{{ registro[2] }}" required>
+
+        <label for="nom_cont">Nombre en contacto:</label>
+        <input type="text" id="nom_cont" name="nom_cont" value="{{ registro[3] }}" required>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <a href="/registrosclientes">⬅ Volver a la lista</a>
+</body>
+</html>

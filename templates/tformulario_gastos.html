@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Registro de Gastos</title>
+</head>
+<body>
+    
+    <h1>Agregar Registro de Gastos</h1>
+    <form method="POST">
+        <label for="des">Descripción de gastos:</label><br>
+        <input type="text" name="des" required><br><br>
+        <label for="fec">Fecha:</label><br>
+        <input type="date" id="fec" name="fec"><br><br>
+        <label for="mon">Monto:</label><br>
+        <input type="text" name="mon" step="0.01"><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <br>
+    <a href="/tregistrosclientes">Ver Registros</a>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Cuentas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Cuentas</h1>
+    <form method="POST">
+        <label for="plataforma">Plataforma:</label><br>
+        <select name="plataforma" id="plataforma" required>
+            <option value="">-- Selecciona una categoría --</option>
+            {% for dat in datos %}
+            <option value="{{ dat[0] }}" {% if dat[0] == registro[1] %}selected{% endif %}>{{ dat[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="ven">Venta:</label><br>
+        <select name="ven" id="ven" required>
+            <option value="">-- Selecciona una venta --</option>
+            {% for ven in ventas %}
+            <option value="{{ ven[0] }}" {% if ven[0] == registro[2] %}selected{% endif %}>{{ ven[0] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="correo">Correo:</label><br>
+        <input type="email" name="correo" required value="{{ registro[3]}}"><br><br>
+
+        <label for="password">Contraseña:</label><br>
+        <input type="text" id="password" name="password" value="{{ registro[4]}}"><br><br>
+
+        <label for="perfil">Nombre de perfil:</label><br>
+        <input type="text" id="perfil" name="perfil" value="{{ registro[5]}}"><br><br>
+
+        <label for="clave">Clave de perfil:</label><br>
+        <input type="text" id="clave" name="clave" value="{{ registro[6]}}"><br><br>
+
+        <label for="tiempo">Tiempo en días:</label><br>
+        <input type="text" id="tiempo" name="tiempo" value="{{ registro[7]}}"><br><br>
+
+        <label for="dateinicio">Fecha de Inicio:</label><br>
+        <input type="date" name="dateinicio" required value="{{ registro[8]}}"><br><br>
+
+        <label for="datefin">Fecha de Culminación:</label><br>
+        <input type="date" name="datefin" required value="{{ registro[9]}}"><br><br>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a href="/registroscuentas">⬅ Volver a la lista</a>
+</body>
+</html>

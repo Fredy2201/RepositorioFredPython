@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Notificaciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Notificaciones</h1>
+    <form method="POST">
+        <label for="fecnotificacion">Fecha de notificación:</label><br>
+        <input type="date" name="fecnotificacion" required value="{{ registro[1] }}"><br><br>
+
+        <label for="cod_cue">Código de cuenta:</label><br>
+        <input type="text" id="cod_cue" name="cod_cue" value="{{registro[2]}}"><br><br>
+
+        <label for="tip_not">Tipo notificación:</label><br>
+        <select name="tip_not" id="tip_not" required>
+            <option value="">-- Selecciona una categoría --</option>
+            {% for dat in datos %}
+            <option value="{{ dat[0] }}" {% if dat[0] == registro[3] %}selected{% endif %}>{{ dat[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <a href="/registrosnotificaciones">⬅ Volver a la lista</a>
+</body>
+</html>

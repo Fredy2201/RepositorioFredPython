@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Registro de Ventas</title>
+</head>
+<body>
+    <h1>Agregar Registro de Ventas</h1>
+    <form method="POST">
+
+
+        <label for="nom">Cliente:</label><br>
+        <select name="nom" id="nom" required>
+            <option value="">-- Selecciona una categoría --</option>
+            {% for reg in registros %}
+            <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="date">Fecha de Venta:</label><br>
+        <input type="date" name="date" required><br><br>
+
+        <label for="mon_cob">Monto cobrado:</label><br>
+        <input type="number" id="mon_cob" name="mon_cob" step="any" pattern="^\d+(\.\d{1,2})?$"><br><br>
+
+        <label for="mon_pag">Monto pagado:</label><br>
+        <input type="number" id="mon_pag" name="mon_pag" step="any" pattern="^\d+(\.\d{1,2})?$"><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <br>
+    <a href="/registrosventas">Ver Registros</a>
+</body>
+</html>

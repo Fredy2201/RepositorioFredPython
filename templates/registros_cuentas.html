@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registros Guardados de Cuentas</title>
+
+    <style>
+        /* Estilos opcionales para que quede bonito */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .contenido {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/registrosventas">Ventas</a>
+        <a href="/registrosclientes">Clientes</a>
+        <a href="/registroscuentas">Cuentas</a>
+        <a href="/registrosestadocuentas">Estado Cuentas</a>
+        <a href="/registrosnotificaciones">Notificaciones</a>
+        <a href="/registrostiponotificaciones">Tipo Notificaciones</a>
+        <a href="/registrosplataformas">Plataformas</a>
+        <a href="/tregistrosservicios">SISTEMA TRANSPORTE</a>
+        <a href="/logout">Cerrar Sesión</a>
+    </nav>
+    <h1>Registros de Cuentas</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Código cuenta</th>
+            <th>Plataforma</th>
+            <th>Codigo de venta</th>
+            <th>Correo</th>
+            <th>Contraseña</th>
+            <th>Perfil</th>
+            <th>Clave</th>
+            <th>Tiempo en Días</th>
+            <th>Fecha de Inicio</th>
+            <th>Fecha de Culminación</th>
+            <th>Días restantes</th>
+        </tr>
+        {% for r in registros %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[3] }}</td>
+            <td>{{ r[4] }}</td>
+            <td>{{ r[5] }}</td>
+            <td>{{ r[6] }}</td>
+            <td>{{ r[7] }}</td>
+            <td>{{ r[8] }}</td>
+            <td>{{ r[9] }}</td>
+            <td>{{ r[11] }}</td>
+            <td>
+                <a href="/editarcuentas/{{ r[0] }}">Editar</a> |
+                <a href="/borrarcuentas/{{ r[0] }}" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/form_cuentas">Agregar Nuevo Registro</a>
+</body>
+</html>

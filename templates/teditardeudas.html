@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Deudas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Deudas</h1>
+    <form method="POST">
+        <label for="des">Descripción de deudas:</label><br>
+        <input type="text" name="des" required value="{{registros[1]}}"><br><br>
+        <label for="mon">Monto:</label><br>
+        <input type="number" name="mon" value="{{registros[2]}}"><br><br>
+        <label for="fece">Fecha Emisión:</label><br>
+        <input type="date" id="fece" name="fece" value="{{registros[3]}}"><br><br>
+        <label for="fecp">Fecha Pago:</label><br>
+        <input type="date" id="fecp" name="fecp" value="{{registros[4]}}"><br><br>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <a href="/tregistrosdeudas">⬅ Volver a la lista</a>
+</body>
+</html>

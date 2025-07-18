@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Plataformas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Plataformas</h1>
+    <form method="POST">
+        
+        <label for="nompla">Nombre de plataforma:</label>
+        <input type="text" id="nompla" name="nompla" value="{{ registro[1] }}" required>
+
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <a href="/registrosplataformas">⬅ Volver a la lista</a>
+</body>
+</html>

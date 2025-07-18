@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Ventas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Ventas</h1>
+    <form method="POST">
+        <label for="cliente">Cliente:</label>
+        <select name="nom" id="nom" required>
+            <option value="">-- Selecciona una categoría --</option>
+            {% for dat in datos %}
+            <option value="{{ dat[0] }}" {% if dat[0] == registro[1] %}selected{% endif %}>{{ dat[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="fec_ven">Fecha de venta:</label>
+        <input type="date" id="fec_ven" name="fec_ven" value="{{ registro[2] }}" required>
+
+        <label for="mon_cob">Monto cobrado:</label>
+        <input type="text" id="mon_cob" name="mon_cob" value="{{ registro[3] }}" required>
+
+        <label for="mon_pag">Monto pagado:</label>
+        <input type="text" id="mon_pag" name="mon_pag" value="{{ registro[4] }}" required>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <a href="/registrosventas">⬅ Volver a la lista</a>
+</body>
+</html>

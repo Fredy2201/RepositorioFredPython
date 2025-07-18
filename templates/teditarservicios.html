@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro de Cuentas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 15px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Registro de Cuentas</h1>
+    <form method="POST">
+        <label for="descripcion">Descripción:</label><br>
+        <input type="text" name="descripcion" required value="{{registros[1]}}"><br><br>
+
+        <label for="fecservicio">Fecha de Servicio:</label><br>
+        <input type="date" name="fecservicio" required value="{{registros[2]}}"><br><br>
+
+        <label for="cliente">Cliente:</label><br>
+        <select name="cliente" id="cliente" required>
+            <option value="">-- Selecciona un cliente --</option>
+            {% for cli in cliente %}
+            <option value="{{ cli[0] }}" {% if cli[0] == registros[3] %}selected{% endif %}>{{ cli[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="monto">Monto Cobrado:</label><br>
+        <input type="number" name="monto" required value="{{registros[4]}}"><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a href="/tregistrosservicios">⬅ Volver a la lista</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Registro de Servicios</title>
+</head>
+<body>
+    <h1>Agregar Registro de Servicios</h1>
+    <form method="POST">
+        <label for="descripcion">Descripción:</label><br>
+        <input type="text" name="descripcion" required><br><br>
+
+        <label for="fecservicio">Fecha de Servicio:</label><br>
+        <input type="date" name="fecservicio" required><br><br>
+
+        <label for="cliente">Cliente:</label><br>
+        <select name="cliente" id="cliente" required>
+            <option value="">-- Selecciona un cliente --</option>
+            {% for reg in registros %}
+            <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="monto">Monto Cobrado:</label><br>
+        <input type="number" name="monto" required><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <br>
+    <a href="/tregistrosservicios">Ver Registros</a>
+</body>
+</html>

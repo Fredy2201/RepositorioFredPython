@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registros Guardados de Deudas</title>
+    <style>
+        /* Estilos opcionales para que quede bonito */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .contenido {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/tregistrosservicios">Servicios</a>
+        <a href="/tregistrosclientes">Clientes</a>
+        <a href="/tregistrosgastos">Gastos</a>
+        <a href="/tregistrosdeudas">Deudas</a>
+        <a href="/tregistroscobros">Cobros Pendientes</a>
+        <a href="/registrosventas">SISTEMA STREAMING</a>
+        <a href="/logout">Cerrar Sesión</a>
+    </nav>
+    <h1>Registros de los Deudas</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Código deuda</th>
+            <th>Descripción</th>
+            <th>Monto</th>
+            <th>Fecha emisión</th>
+            <th>Fecha pago</th>
+        </tr>
+        {% for r in registros %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[3] }}</td>
+            <td>{{ r[4] }}</td>
+            <td>
+                <a href="/teditardeudas/{{ r[0] }}">Editar</a> |
+                <a href="/tborrardeudas/{{ r[0] }}" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/tformdeudas">Agregar Nuevo Registro</a>
+</body>
+</html>

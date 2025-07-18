@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Registro de Notificaciones</title>
+</head>
+<body>
+    
+    <h1>Agregar Registro de Notificaciones</h1>
+    <form method="POST">
+        <label for="fecnotificacion">Fecha de notificación:</label><br>
+        <input type="date" name="fecnotificacion" required><br><br>
+
+        <label for="cod_cue">Código de cuenta:</label><br>
+        <input type="text" id="cod_cue" name="cod_cue"><br><br>
+
+        <label for="tip_not">Tipo notificación:</label><br>
+        <select name="tip_not" id="tip_not" required>
+            <option value="">-- Selecciona una categoría --</option>
+            {% for reg in registro %}
+            <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <br>
+    <a href="/registrosnotificaciones">Ver Registros</a>
+</body>
+</html>
