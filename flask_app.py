@@ -852,7 +852,7 @@ def tregistrosgastos():
     c = conn.cursor()
     c.execute("""SELECT * 
               FROM gastos 
-              WHERE cond_gas=1""")
+              WHERE cond_gas=1 ORDER BY cod_gas DESC""")
     datos = c.fetchall()
     conn.close()
     return render_template("tregistros_gastos.html", registros=datos)
