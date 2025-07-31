@@ -2,30 +2,86 @@
 <html>
 <head>
     <title>Formulario de Registro de Servicios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .contenido{
+            width: 100%;
+            
+            margin: 0 auto;
+        }
+        .formulario{
+            width: 80%;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Agregar Registro de Servicios</h1>
-    <form method="POST">
-        <label for="descripcion">Descripción:</label><br>
-        <input type="text" name="descripcion" required><br><br>
+    
+    <div class="contenido">
+        <form method="POST" class="formulario">
+            <h2 class="mt-4">Agregar Registro de Servicios</h2><br><br>
+            <input type="hidden" name="form_name" value="form1">
+            <label for="descripcion">Descripción:</label><br>
+            <input type="text" name="descripcion" required class="form-control"><br>
 
-        <label for="fecservicio">Fecha de Servicio:</label><br>
-        <input type="date" name="fecservicio" required><br><br>
+            <label for="fecservicio">Fecha de Servicio:</label><br>
+            <input type="date" name="fecservicio" required class="form-control"><br>
 
-        <label for="cliente">Cliente:</label><br>
-        <select name="cliente" id="cliente" required>
-            <option value="">-- Selecciona un cliente --</option>
-            {% for reg in registros %}
-            <option value="{{ reg[0] }}">{{ reg[1] }}</option>
-            {% endfor %}
-        </select><br><br>
+            <label for="cliente">Cliente:</label>
+            <div class="d-flex">
+                <select name="cliente" id="cliente" required class="form-select">
+                    <option value="">-- Selecciona un cliente --</option>
+                    {% for reg in registros %}
+                    <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+                    {% endfor %}
+                </select><br><br>
 
-        <label for="monto">Monto Cobrado:</label><br>
-        <input type="number" name="monto" required><br><br>
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#miModal">Agregar Cliente</button><br>
+            </div>
 
-        <button type="submit">Guardar</button>
-    </form>
-    <br>
-    <a href="/tregistrosservicios">Ver Registros</a>
+            <label for="monto">Monto Cobrado:</label><br>
+            <input type="number" step="any" name="monto" required class="form-control"><br>
+
+            <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+            <a href="/tregistrosservicios">Ver Registros</a>
+        </form>
+        <br>
+    
+    </div>
+
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          
+            <div class="modal-header">
+              <h5 class="modal-title" id="miModalLabel">Agregar Registro de Clientes</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <div class="modal-body">
+                <form method="POST">
+                    <input type="hidden" name="form_name" value="form2" class="form-control">
+                    <label for="cliente">Nombre Cliente:</label><br>
+                    <input type="text" name="cliente" required class="form-control"><br>
+                    <label for="phone">Telefono:</label><br>
+                    <input type="tel" id="phone" name="phone" placeholder="51910101010" class="form-control"><br>
+                    <label for="nomcont">Nombre Contacto:</label><br>
+                    <input type="text" name="nomcont" class="form-control"><br>
+            
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

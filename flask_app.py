@@ -4,7 +4,7 @@ import sqlite3
 
 app = Flask(__name__)
 app.secret_key="f84b2a5c1e764eac9c2d8b9c1fb13e7a"
-app.permanent_session_lifetime = timedelta(minutes=10) 
+#app.permanent_session_lifetime = timedelta(minutes=10) 
 
 @app.route("/")
 def inicio():
@@ -677,19 +677,34 @@ def tformservicios():
     conn.close()
 
     if request.method == "POST":
-        descripcion=request.form["descripcion"]
-        fecservicio=request.form["fecservicio"]
-        cliente = request.form["cliente"]
-        monto=request.form["monto"]
-        cond_ser=1
+        form_name = request.form.get("form_name")
+        if form_name == "form1":
+            descripcion=request.form["descripcion"]
+            fecservicio=request.form["fecservicio"]
+            cliente = request.form["cliente"]
+            monto=request.form["monto"]
+            cond_ser=1
 
-        conn = sqlite3.connect("data1.db")
-        c = conn.cursor()
-        c.execute("INSERT INTO servicios (des_ser, fec_ser, cod_cli, monto, cond_ser) VALUES (?, ?, ?, ?, ?)", (descripcion, fecservicio, cliente, monto, cond_ser))
-        conn.commit()
-        conn.close()
+            conn = sqlite3.connect("data1.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO servicios (des_ser, fec_ser, cod_cli, monto, cond_ser) VALUES (?, ?, ?, ?, ?)", (descripcion, fecservicio, cliente, monto, cond_ser))
+            conn.commit()
+            conn.close()
 
-        return redirect("/tregistrosservicios")  # Redirigir después de guardar
+            return redirect("/tregistrosservicios")  # Redirigir después de guardar
+        if form_name == "form2":
+            cliente=request.form["cliente"]
+            phone=request.form["phone"]
+            nomcont = request.form["nomcont"]
+            cond_cli=1
+
+            conn = sqlite3.connect("data1.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO clientes (nom_cli, tel_cli, nom_con, cond_cli) VALUES (?, ?, ?, ?)", (cliente, phone, nomcont, cond_cli))
+            conn.commit()
+            conn.close()
+
+            return redirect("/tformservicios")  # Redirigir después de guardar
     return render_template("tformulario_servicios.html", registros=registro)
 
 @app.route("/teditarservicios/<int:id>", methods=["GET", "POST"])
