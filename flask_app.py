@@ -660,7 +660,7 @@ def tregistrosservicios():
     c = conn.cursor()
     c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
               FROM servicios,clientes 
-              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli""")
+              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli ORDER BY cod_ser DESC""")
     datos = c.fetchall()
     conn.close()
     return render_template("tregistros_servicios.html", registros=datos)

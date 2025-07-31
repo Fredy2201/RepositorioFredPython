@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>Registros Guardados de Servicios</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
     <style>
         /* Estilos opcionales para que quede bonito */
         body {
@@ -21,11 +24,19 @@
             text-decoration: underline;
         }
         .contenido {
-            padding: 20px;
+            width: 100%;
+        }
+        .tabla{
+            margin: 0 auto;
+        }
+        .table{
+            width: 90%;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
+    
     <nav>
         <a href="/tregistrosservicios">Servicios</a>
         <a href="/tregistrosclientes">Clientes</a>
@@ -36,31 +47,34 @@
         <a href="/logout">Cerrar Sesión</a>
     </nav>
     <h1>Registros de Servicios</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Código Servicio</th>
-            <th>Descripción</th>
-            <th>Fecha</th>
-            <th>Cliente</th>
-            <th>Monto cobrado</th>
-        </tr>
-        {% for r in registros %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ r[0] }}</td>
-            <td>{{ r[1] }}</td>
-            <td>{{ r[2] }}</td>
-            <td>{{ r[3] }}</td>
-            <td>{{ r[4] }}</td>
-            <td>
-                <a href="/teditarservicios/{{ r[0] }}">Editar</a> |
-                <a href="/tborrarservicios/{{ r[0] }}" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="contenido">
+        <a href="/tformservicios" class="btn btn-primary">Agregar Nuevo Registro</a>
+        <table border="1" class="table mt-4">
+            <tr>
+                <th>ID</th>
+                <th>Código Servicio</th>
+                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Monto cobrado</th>
+            </tr>
+            {% for r in registros %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+                <td>{{ r[4] }}</td>
+                <td>
+                    <a href="/teditarservicios/{{ r[0] }}" class="btn btn-warning">Editar</a> |
+                    <a href="/tborrarservicios/{{ r[0] }}" class="btn btn-danger onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
     <br>
-    <a href="/tformservicios">Agregar Nuevo Registro</a>
+    
 </body>
 </html>
