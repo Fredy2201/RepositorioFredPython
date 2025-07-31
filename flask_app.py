@@ -770,7 +770,7 @@ def tregistrosclientes():
     c = conn.cursor()
     c.execute("""SELECT * 
               FROM clientes 
-              WHERE cond_cli=1""")
+              WHERE cond_cli=1 ORDER BY nom_cli""")
     datos = c.fetchall()
     conn.close()
     return render_template("tregistros_clientes.html", registros=datos)

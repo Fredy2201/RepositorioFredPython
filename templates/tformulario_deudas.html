@@ -2,24 +2,37 @@
 <html>
 <head>
     <title>Formulario de Registro de Deudas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .formulario{
+            width: 80%;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     
-    <h1>Agregar Registro de Deudas</h1>
-    <form method="POST">
-        <label for="des">Descripción de deudas:</label><br>
-        <input type="text" name="des" required><br><br>
-        <label for="mon">Monto:</label><br>
-        <input type="number" name="mon" ><br><br>
-        <label for="fece">Fecha Emisión:</label><br>
-        <input type="date" id="fece" name="fece"><br><br>
-        <label for="fecp">Fecha Pago:</label><br>
-        <input type="date" id="fecp" name="fecp"><br><br>
-        
-
-        <button type="submit">Guardar</button>
-    </form>
-    <br>
-    <a href="/tregistrosclientes">Ver Registros</a>
+    
+    <div class="container border mt-5 shadow-sm bg-light p-5 rounded">
+        <form method="POST" class="formulario">
+            <h3 class="text-center">Agregar Registro de Deudas</h3>
+            <label for="des">Descripción de deudas:</label>
+            <input type="text" name="des" required class="form-control"><br>
+            <label for="mon">Monto:</label>
+            <input type="number" name="mon" class="form-control"><br>
+            <label for="fece">Fecha Emisión:</label>
+            <input type="date" id="fece" name="fece" class="form-control"><br>
+            <label for="fecp">Fecha Pago:</label>
+            <input type="date" id="fecp" name="fecp" class="form-control"><br>
+            
+    
+            <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+            <a href="/tregistrosclientes">Ver Registros</a>
+        </form>
+    </div>
+    
 </body>
 </html>
