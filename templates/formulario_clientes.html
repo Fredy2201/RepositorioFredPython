@@ -2,21 +2,37 @@
 <html>
 <head>
     <title>Formulario de Registro de Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .formulario{
+            width: 80%;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     
-    <h1>Agregar Registro de Clientes</h1>
-    <form method="POST">
-        <label for="NomCliente">Nombre Cliente:</label><br>
-        <input type="text" name="NomCliente" required><br><br>
-        <label for="phone">Whatsapp:</label><br>
-        <input type="tel" id="phone" name="phone" placeholder="51910101010"><br><br>
-        <label for="nom_cont">Nombre Contacto:</label><br>
-        <input type="text" name="nom_cont" required><br><br>
+    
+    <div class="container border mt-5 shadow-sm">
 
-        <button type="submit">Guardar</button>
-    </form>
+        <form method="POST" class="formulario">
+            <h3 class="text-center">Agregar Registro de Clientes</h3>
+            <label for="NomCliente">Nombre Cliente:</label><br>
+            <input type="text" name="NomCliente" required class="form-control"><br>
+            <label for="phone">Whatsapp:</label><br>
+            <input type="tel" id="phone" name="phone" placeholder="51910101010" class="form-control"><br>
+            <label for="nom_cont">Nombre Contacto:</label><br>
+            <input type="text" name="nom_cont" required class="form-control"><br>
+    
+            <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+            <a href="/registrosclientes">Ver Registros</a>
+        </form>
+    </div>
     <br>
-    <a href="/registrosclientes">Ver Registros</a>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
 </html>

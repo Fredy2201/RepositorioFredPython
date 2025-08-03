@@ -2,79 +2,101 @@
 <html>
 <head>
     <title>Registros Guardados de Cuentas</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
     <style>
-        /* Estilos opcionales para que quede bonito */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        nav {
-            background-color: #333;
-            padding: 10px;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin-right: 15px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
+        
         .contenido {
             padding: 20px;
         }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/registrosventas">Ventas</a>
-        <a href="/registrosclientes">Clientes</a>
-        <a href="/registroscuentas">Cuentas</a>
-        <a href="/registrosestadocuentas">Estado Cuentas</a>
-        <a href="/registrosnotificaciones">Notificaciones</a>
-        <a href="/registrostiponotificaciones">Tipo Notificaciones</a>
-        <a href="/registrosplataformas">Plataformas</a>
-        <a href="/tregistrosservicios">SISTEMA TRANSPORTE</a>
-        <a href="/logout">Cerrar Sesión</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Streaming</a>
+    
+            <!-- Botón hamburguesa -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuResponsive" aria-controls="menuResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+        <!-- Opciones del menú -->
+            <div class="collapse navbar-collapse" id="menuResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link " href="/registrosventas">Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/registrosclientes">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/registroscuentas">Cuentas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrosnotificaciones">Notificaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrostiponotificaciones">Tipo Notificaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrosplataformas">Plataformas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ini">Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-    <h1>Registros de Cuentas</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Código cuenta</th>
-            <th>Plataforma</th>
-            <th>Codigo de venta</th>
-            <th>Correo</th>
-            <th>Contraseña</th>
-            <th>Perfil</th>
-            <th>Clave</th>
-            <th>Tiempo en Días</th>
-            <th>Fecha de Inicio</th>
-            <th>Fecha de Culminación</th>
-            <th>Días restantes</th>
-        </tr>
-        {% for r in registros %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ r[0] }}</td>
-            <td>{{ r[1] }}</td>
-            <td>{{ r[2] }}</td>
-            <td>{{ r[3] }}</td>
-            <td>{{ r[4] }}</td>
-            <td>{{ r[5] }}</td>
-            <td>{{ r[6] }}</td>
-            <td>{{ r[7] }}</td>
-            <td>{{ r[8] }}</td>
-            <td>{{ r[9] }}</td>
-            <td>{{ r[11] }}</td>
-            <td>
-                <a href="/editarcuentas/{{ r[0] }}">Editar</a> |
-                <a href="/borrarcuentas/{{ r[0] }}" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+
+
+    <h3 class="text-center">Registros de Cuentas</h3>
+    <a href="/form_cuentas" class="btn btn-primary ms-5">Agregar Nuevo Registro</a><br><br>
+    <div class="table-responsive">
+        <table border="1" class="table table-bordered table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Código cuenta</th>
+                <th>Plataforma</th>
+                <th>Codigo de venta</th>
+                <th>Correo</th>
+                <th>Contraseña</th>
+                <th>Perfil</th>
+                <th>Clave</th>
+                <th>Tiempo en Días</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Culminación</th>
+                <th>Días restantes</th>
+            </tr>
+            {% for r in registros %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+                <td>{{ r[4] }}</td>
+                <td>{{ r[5] }}</td>
+                <td>{{ r[6] }}</td>
+                <td>{{ r[7] }}</td>
+                <td>{{ r[8] }}</td>
+                <td>{{ r[9] }}</td>
+                <td>{{ r[11] }}</td>
+                <td>
+                    <a href="/editarcuentas/{{ r[0] }}" class="btn btn-warning">Editar</a> |
+                    <a href="/borrarcuentas/{{ r[0] }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
     <br>
-    <a href="/form_cuentas">Agregar Nuevo Registro</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
 </html>

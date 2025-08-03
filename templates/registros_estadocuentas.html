@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Registros Guardados de Estado de Cuentas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
     <style>
         /* Estilos opcionales para que quede bonito */
         body {
@@ -25,16 +29,45 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/registrosventas">Ventas</a>
-        <a href="/registrosclientes">Clientes</a>
-        <a href="/registroscuentas">Cuentas</a>
-        <a href="/registrosestadocuentas">Estado Cuentas</a>
-        <a href="/registrosnotificaciones">Notificaciones</a>
-        <a href="/registrostiponotificaciones">Tipo Notificaciones</a>
-        <a href="/registrosplataformas">Plataformas</a>
-        <a href="/tregistrosservicios">SISTEMA TRANSPORTE</a>
-        <a href="/logout">Cerrar Sesión</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Streaming</a>
+    
+            <!-- Botón hamburguesa -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuResponsive" aria-controls="menuResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+        <!-- Opciones del menú -->
+            <div class="collapse navbar-collapse" id="menuResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link " href="/registrosventas">Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/registrosclientes">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/registroscuentas">Cuentas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrosnotificaciones">Notificaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrostiponotificaciones">Tipo Notificaciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrosplataformas">Plataformas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ini">Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
     <h1>Registros de los Estados de Cuentas</h1>
     <table border="1">

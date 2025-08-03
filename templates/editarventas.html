@@ -2,55 +2,46 @@
 <html>
 <head>
     <title>Editar Registro de Ventas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        form {
-            width: 300px;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        input, select {
-            width: 100%;
-            padding: 5px;
-        }
-        button {
-            margin-top: 15px;
-            padding: 8px 15px;
-        }
-        a {
-            display: inline-block;
-            margin-top: 10px;
-            text-decoration: none;
+        .formulario{
+            width: 80%;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
-    <h1>Editar Registro de Ventas</h1>
-    <form method="POST">
-        <label for="cliente">Cliente:</label>
-        <select name="nom" id="nom" required>
-            <option value="">-- Selecciona una categoría --</option>
-            {% for dat in datos %}
-            <option value="{{ dat[0] }}" {% if dat[0] == registro[1] %}selected{% endif %}>{{ dat[1] }}</option>
-            {% endfor %}
-        </select><br><br>
+    
+    <div class="container border mt-5 shadow-sm d-flex justify-content-center">
+        <form method="POST" class="formulario m-4">
+            <h3 class="text-center">Editar Registro de Ventas</h3>
+            <label for="cliente">Cliente:</label>
+            <select name="nom" id="nom" required class="form-select">
+                <option value="">-- Selecciona una categoría --</option>
+                {% for dat in datos %}
+                <option value="{{ dat[0] }}" {% if dat[0] == registro[1] %}selected{% endif %}>{{ dat[1] }}</option>
+                {% endfor %}
+            </select>
+    
+            <label for="fec_ven">Fecha de venta:</label>
+            <input type="date" id="fec_ven" name="fec_ven" value="{{ registro[2] }}" required class="form-control">
+    
+            <label for="mon_cob">Monto cobrado:</label>
+            <input type="text" id="mon_cob" name="mon_cob" value="{{ registro[3] }}" required class="form-control">
+    
+            <label for="mon_pag">Monto pagado:</label>
+            <input type="text" id="mon_pag" name="mon_pag" value="{{ registro[4] }}" required class="form-control">
+    
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button><br><br>
+            <a href="/registrosventas">⬅ Volver a la lista</a>
+        </form>
 
-        <label for="fec_ven">Fecha de venta:</label>
-        <input type="date" id="fec_ven" name="fec_ven" value="{{ registro[2] }}" required>
+    </div>
+    
 
-        <label for="mon_cob">Monto cobrado:</label>
-        <input type="text" id="mon_cob" name="mon_cob" value="{{ registro[3] }}" required>
-
-        <label for="mon_pag">Monto pagado:</label>
-        <input type="text" id="mon_pag" name="mon_pag" value="{{ registro[4] }}" required>
-
-        <button type="submit">Guardar Cambios</button>
-    </form>
-
-    <a href="/registrosventas">⬅ Volver a la lista</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
 </html>

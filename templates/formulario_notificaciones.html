@@ -2,28 +2,42 @@
 <html>
 <head>
     <title>Formulario de Registro de Notificaciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .formulario{
+            width: 80%;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     
-    <h1>Agregar Registro de Notificaciones</h1>
-    <form method="POST">
-        <label for="fecnotificacion">Fecha de notificación:</label><br>
-        <input type="date" name="fecnotificacion" required><br><br>
-
-        <label for="cod_cue">Código de cuenta:</label><br>
-        <input type="text" id="cod_cue" name="cod_cue"><br><br>
-
-        <label for="tip_not">Tipo notificación:</label><br>
-        <select name="tip_not" id="tip_not" required>
-            <option value="">-- Selecciona una categoría --</option>
-            {% for reg in registro %}
-            <option value="{{ reg[0] }}">{{ reg[1] }}</option>
-            {% endfor %}
-        </select><br><br>
-
-        <button type="submit">Guardar</button>
-    </form>
+    
+    <div class="container border mt-5 shadow-sm">
+        <form method="POST" class="formulario">
+            <h3 class="text-center">Agregar Registro de Notificaciones</h3>
+            <label for="fecnotificacion">Fecha de notificación:</label><br>
+            <input type="date" name="fecnotificacion" required class="form-control"><br>
+    
+            <label for="cod_cue">Código de cuenta:</label><br>
+            <input type="text" id="cod_cue" name="cod_cue" class="form-control"><br>
+    
+            <label for="tip_not">Tipo notificación:</label><br>
+            <select name="tip_not" id="tip_not" required class="form-select">
+                <option value="">-- Selecciona una categoría --</option>
+                {% for reg in registro %}
+                <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+                {% endfor %}
+            </select><br>
+    
+            <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+            <a href="/registrosnotificaciones">Ver Registros</a>
+        </form>
+    </div>
     <br>
-    <a href="/registrosnotificaciones">Ver Registros</a>
+    
 </body>
 </html>
