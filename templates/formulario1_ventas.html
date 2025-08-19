@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Registro de Ventas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .formulario{
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container border mt-5 shadow-sm">
+        <form method="POST" action="/form1ventas" class="formulario">
+            <h3 class="text-center">Agregar Registro de Ventas</h3>
+
+            <label for="nom">Cliente:</label><br>
+            <div class="d-flex">
+                <select name="nom" id="nom" required class="form-select">
+                    <option value="">-- Selecciona una categoría --</option>
+                    {% for reg in registros %}
+                    <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+                    {% endfor %}
+                </select><br>
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#miModal1">Agregar Cliente</button><br>
+            </div><br>
+            
+            <label for="date">Fecha de Venta:</label><br>
+            <input type="date" name="date" required class="form-control"><br>
+
+
+            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#miModal">Agregar Plataforma</button><br><br>
+            <table border="1" class="table table-striped table-bordered">
+                <tr>
+                    <th>ID</th>
+                    <th>Plataforma</th>
+                    <th>Correo</th>
+                    <th>Contraseña</th>
+                    <th>Perfil</th>
+                    <th>Clave</th>
+                    <th>Tiempo en Días</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Culminación</th>
+                </tr>
+                {% for r in carrito %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ r.nom_pla }}</td>
+                    <td>{{ r.correo }}</td>
+                    <td>{{ r.password }}</td>
+                    <td>{{ r.perfil }}</td>
+                    <td>{{ r.clave }}</td>
+                    <td>{{ r.tiempo }}</td>
+                    <td>{{ r.dateinicio }}</td>
+                    <td>{{ r.datefin }}</td>
+                    <td>
+                        <a href="{{ url_for('borrar1ventas', index=loop.index0) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            
+
+            <label for="mon_cob">Monto cobrado:</label><br>
+            <input type="number" id="mon_cob" name="mon_cob" step="any" pattern="^\d+(\.\d{1,2})?$" class="form-control"><br>
+
+            <label for="mon_pag">Monto pagado:</label><br>
+            <input type="number" id="mon_pag" name="mon_pag" step="any" pattern="^\d+(\.\d{1,2})?$" class="form-control"><br>
+
+            <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+            <a href="/registrosventas" >Ver Registros</a>
+        </form>
+    </div>
+    <br>
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="miModalLabel">Agregar Registro de Cuentas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <div class="modal-body">
+                <form method="POST" action="/agregar_servicio" class="formulario">
+            
+                    <label for="plataforma">Plataforma:</label><br>
+                    <select name="plataforma" id="plataforma" required class="form-select">
+                        <option value="">-- Selecciona una categoría --</option>
+                        {% for reg in plataformas %}
+                        <option value="{{ reg[0] }}|{{ reg[1] }}">{{ reg[1] }}</option>
+                        {% endfor %}
+                    </select><br>
+            
+                    
+            
+                    <label for="correo">Correo:</label><br>
+                    <input type="text" name="correo" required class="form-control"><br>
+            
+                    <label for="password">Contraseña:</label><br>
+                    <input type="text" id="password" name="password" class="form-control"><br>
+            
+                    <label for="perfil">Nombre de perfil:</label><br>
+                    <input type="text" id="perfil" name="perfil" class="form-control"><br>
+            
+                    <label for="clave">Clave de perfil:</label><br>
+                    <input type="text" id="clave" name="clave" class="form-control"><br>
+            
+                    <label for="tiempo">Tiempo en días:</label><br>
+                    <input type="text" id="tiempo" name="tiempo" class="form-control"><br>
+            
+                    <label for="dateinicio">Fecha de Inicio:</label><br>
+                    <input type="date" name="dateinicio" required class="form-control"><br>
+            
+                    <label for="datefin">Fecha de Culminación:</label><br>
+                    <input type="date" name="datefin" required class="form-control"><br>
+                    <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+                    <a href="/registroscuentas">Ver Registros</a>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="miModal1" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="miModalLabel">Agregar Registro de Clientes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <div class="modal-body">
+                <form method="POST" action="/form1clientes" class="formulario">
+                    <label for="cliente">Nombre Cliente:</label><br>
+                    <input type="text" name="cliente" required class="form-control"><br>
+                    <label for="phone">Telefono:</label><br>
+                    <input type="tel" id="phone" name="phone" placeholder="51910101010" class="form-control"><br>
+                    <label for="nomcont">Nombre Contacto:</label><br>
+                    <input type="text" name="nomcont" class="form-control"><br>
+            
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <br><br>
+                    <a href="/tregistrosclientes">Ver Registros</a>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>

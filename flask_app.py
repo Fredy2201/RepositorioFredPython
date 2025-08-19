@@ -43,6 +43,131 @@ def index():
     # Mostrar formulario
     return render_template("formulario_ventas.html", registros=datos)
 
+
+@app.route("/form1ventas", methods=["GET", "POST"])
+def form1ventas():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    if "carrito" not in session:
+        session["carrito"] = []
+
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+    c.execute("SELECT MAX(cod_ven) as codalto FROM ventas where cond_ven=1")
+    codigoalto = c.fetchone()[0]
+
+    c.execute("SELECT * FROM clientes where cond_cli=1 ")
+    clientes = c.fetchall()
+
+    c.execute("SELECT * FROM plataformas where cond_pla=1 ")
+    plataformas = c.fetchall()
+
+    conn.close()
+
+    if request.method == "POST":
+        nom = request.form["nom"]
+        fecha = request.form["date"]
+        mon_cob=request.form["mon_cob"]
+        mon_pag=request.form["mon_pag"]
+        cond_ven=1
+
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO ventas (cod_cli, fec_ven, cobro , pago, cond_ven) VALUES (?, ?, ?, ?, ?)", (nom, fecha, mon_cob, mon_pag, cond_ven))
+        conn.commit()
+
+
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+        
+        carrito = session.get("carrito", [])
+        for item in carrito:
+            c.execute("""
+                INSERT INTO cuentas 
+                (cod_pla, cod_ven, correo, password, perfil, clave, tiempo, fec_ini, fec_cul, cond_cue) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                item["id_pla"], 
+                codigoalto+1, 
+                item["correo"], 
+                item["password"], 
+                item["perfil"], 
+                item["clave"], 
+                item["tiempo"], 
+                item["dateinicio"], 
+                item["datefin"], 
+                1,   # cond_cue
+            ))
+
+        
+        conn.commit()
+        conn.close()
+        session.pop("carrito", None)
+
+
+        return redirect("/registrosventas")  # Redirigir después de guardar
+
+    # Mostrar formulario
+    return render_template("formulario1_ventas.html", registros=clientes, carrito=session["carrito"], plataformas=plataformas)
+
+@app.route("/agregar_servicio", methods=["POST"])
+def agregarservicio():
+    plataforma=request.form["plataforma"]
+    id_pla,nom_pla=plataforma.split("|")
+    correo=request.form["correo"]
+    password=request.form["password"]
+    perfil=request.form["perfil"]
+    clave=request.form["clave"]
+    tiempo=request.form["tiempo"]
+    dateinicio=request.form["dateinicio"]
+    datefin=request.form["datefin"]
+
+    item={
+        "id_pla": id_pla,
+        "nom_pla":nom_pla,
+        "correo": correo,
+        "password": password,
+        "perfil": perfil,
+        "clave": clave,
+        "tiempo": tiempo,
+        "dateinicio":dateinicio,
+        "datefin": datefin
+    }
+    carrito = session.get("carrito", [])
+    carrito.append(item)
+    session["carrito"] = carrito
+
+    return redirect("/form1ventas")
+
+@app.route("/borrar1ventas/<int:index>")
+def borrar1ventas(index):
+    carrito = session.get("carrito", [])
+    if 0 <= index < len(carrito):
+        del carrito[index]
+        session["carrito"] = carrito
+    return redirect(url_for("form1ventas"))
+
+
+@app.route("/form1clientes", methods=["GET", "POST"])
+def form1clientes():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == "POST":
+        cliente=request.form["cliente"]
+        phone=request.form["phone"]
+        nomcont = request.form["nomcont"]
+        cond_cli=1
+
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO clientes (nom_cli, whatsapp, nom_cont, cond_cli) VALUES (?, ?, ?, ?)", (cliente, phone, nomcont, cond_cli))
+        conn.commit()
+        conn.close()
+
+    return redirect("/form1ventas")  
+
 # Mostrar registros
 @app.route("/registrosventas")
 def registros():
@@ -52,7 +177,7 @@ def registros():
 
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
-    c.execute("SELECT cod_ven, clientes.nom_cli, fec_ven, cobro, pago FROM ventas, clientes where ventas.cod_cli=clientes.id and ventas.cond_ven=1")
+    c.execute("SELECT cod_ven, clientes.nom_cli, fec_ven, cobro, pago FROM ventas, clientes where ventas.cod_cli=clientes.id and ventas.cond_ven=1 ORDER BY cod_ven DESC")
     datos = c.fetchall()
     conn.close()
     return render_template("registros_ventas.html", registros=datos)
@@ -236,7 +361,7 @@ def registroscuentas():
     
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
-    c.execute("SELECT cuentas.cod_cue,plataformas.nom_pla,cuentas.cod_ven,cuentas.correo,cuentas.password,cuentas.perfil,cuentas.clave,cuentas.tiempo,cuentas.fec_ini,cuentas.fec_cul,cuentas.cond_cue, ROUND(julianday(cuentas.fec_cul) - julianday('now')) AS dias_restantes FROM cuentas,plataformas where cond_cue=1 AND cuentas.cod_pla=plataformas.cod_pla ORDER BY cod_cue")
+    c.execute("SELECT cuentas.cod_cue,plataformas.nom_pla,cuentas.cod_ven,cuentas.correo,cuentas.password,cuentas.perfil,cuentas.clave,cuentas.tiempo,cuentas.fec_ini,cuentas.fec_cul,cuentas.cond_cue, ROUND(julianday(cuentas.fec_cul) - julianday('now')) AS dias_restantes FROM cuentas,plataformas where cond_cue=1 AND cuentas.cod_pla=plataformas.cod_pla ORDER BY cod_cue DESC")
     datos = c.fetchall()
     conn.close()
     return render_template("registros_cuentas.html", registros=datos)
