@@ -51,6 +51,10 @@ def form1ventas():
     
     if "carrito" not in session:
         session["carrito"] = []
+    if "datos_for" not in session:
+            session["datos_for"] = []
+
+
 
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
@@ -109,10 +113,12 @@ def form1ventas():
         return redirect("/registrosventas")  # Redirigir después de guardar
 
     # Mostrar formulario
-    return render_template("formulario1_ventas.html", registros=clientes, carrito=session["carrito"], plataformas=plataformas)
+    return render_template("formulario1_ventas.html", registros=clientes, carrito=session["carrito"], plataformas=plataformas, datos_for=session["datos_for"])
 
 @app.route("/agregar_servicio", methods=["POST"])
 def agregarservicio():
+    
+
     plataforma=request.form["plataforma"]
     id_pla,nom_pla=plataforma.split("|")
     correo=request.form["correo"]
@@ -137,6 +143,8 @@ def agregarservicio():
     carrito = session.get("carrito", [])
     carrito.append(item)
     session["carrito"] = carrito
+
+
 
     return redirect("/form1ventas")
 
