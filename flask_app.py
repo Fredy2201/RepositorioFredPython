@@ -61,7 +61,7 @@ def form1ventas():
     c.execute("SELECT MAX(cod_ven) as codalto FROM ventas where cond_ven=1")
     codigoalto = c.fetchone()[0]
 
-    c.execute("SELECT * FROM clientes where cond_cli=1 ")
+    c.execute("SELECT * FROM clientes where cond_cli=1 ORDER BY nom_cli asc")
     clientes = c.fetchall()
 
     c.execute("SELECT * FROM plataformas where cond_pla=1 ")
@@ -264,6 +264,20 @@ def formClientes():
     # Mostrar formulario
     return render_template("formulario_clientes.html")
 
+
+@app.route("/reportesplataformas")
+def reportesplataformas():
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM clientes where cond_cli=1 ORDER BY nom_cli asc")
+    datos = c.fetchall()
+
+    c.execute("SELECT SUM(cobro) AS total_cobro, SUM(pago) as total_pago FROM ventas;")
+    ingresos = c.fetchone()
+
+    conn.close()
+    return render_template("reportes_plataformas.html", datos=datos, ingresos=ingresos)
+
 @app.route("/registrosclientes")
 def registrosClientes():
     if 'usuario' not in session:
@@ -271,7 +285,7 @@ def registrosClientes():
     
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
-    c.execute("SELECT * FROM clientes where cond_cli=1")
+    c.execute("SELECT * FROM clientes where cond_cli=1 ORDER BY nom_cli asc")
     datos = c.fetchall()
     conn.close()
     return render_template("registros_clientes.html", registros=datos)

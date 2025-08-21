@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes</title>
+</head>
+<body>
+    
+    <h4>Ingresos por plataformas</h4>
+    <p>S/. {{ ingresos[0] }} </p>
+    <h4>Cobros por plataformas</h4>
+    <p>S/. {{ ingresos[1] }} </p>
+    <h3>Ganancia Neta</h3>
+    <p>S/. {{ ingresos[0] - ingresos[1] }}</p>
+    <br><br>
+
+    <a href="/registrosventas">Volver a ventas</a>
+</body>
+<script>
+    // Lista de valores (puedes traerlos desde Flask/Jinja)
+    const clientes = [
+        {% for c in datos %}
+            "{{ c[1] }}",
+        {% endfor %}
+    ];
+    
+    const input = document.getElementById("buscador");
+    const sugerencias = document.getElementById("sugerencias");
+    
+    // Evento al escribir
+    input.addEventListener("keyup", function() {
+        let filtro = this.value.toLowerCase();
+        sugerencias.innerHTML = ""; // limpiar
+        
+        if (filtro.length === 0) return; // si está vacío, no mostrar nada
+    
+        // filtrar coincidencias
+        let resultados = clientes.filter(c => c.toLowerCase().includes(filtro));
+    
+        // mostrar sugerencias
+        resultados.forEach(r => {
+            let item = document.createElement("div");
+            item.classList.add("list-group-item", "list-group-item-action");
+            item.textContent = r;
+    
+            // cuando haces clic en una sugerencia
+            item.addEventListener("click", function() {
+                input.value = r; 
+                sugerencias.innerHTML = ""; // ocultar lista
+            });
+    
+            sugerencias.appendChild(item);
+        });
+    });
+    </script>
+</html>
