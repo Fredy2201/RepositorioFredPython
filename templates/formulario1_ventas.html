@@ -14,40 +14,43 @@
 </head>
 <body>
     
-    <div class="container border mt-5 shadow-sm">
+    <div class="container border mt-5 shadow-sm p-5">
         <form method="POST" action="/form1ventas" class="formulario">
-            <h3 class="text-center">Agregar Registro de Ventas</h3>
+            <h3 class="text-center">Agregar Registro de Ventas</h3><br><br>
 
             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#miModal">Agregar Plataforma Vendidas</button><br><br>
-            <table border="1" class="table table-striped table-bordered">
-                <tr>
-                    <th>ID</th>
-                    <th>Plataforma</th>
-                    <th>Correo</th>
-                    <th>Contraseña</th>
-                    <th>Perfil</th>
-                    <th>Clave</th>
-                    <th>Tiempo en Días</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha de Culminación</th>
-                </tr>
-                {% for r in carrito %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ r.nom_pla }}</td>
-                    <td>{{ r.correo }}</td>
-                    <td>{{ r.password }}</td>
-                    <td>{{ r.perfil }}</td>
-                    <td>{{ r.clave }}</td>
-                    <td>{{ r.tiempo }}</td>
-                    <td>{{ r.dateinicio }}</td>
-                    <td>{{ r.datefin }}</td>
-                    <td>
-                        <a href="{{ url_for('borrar1ventas', index=loop.index0) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table><br><br>
+            <div class="table-responsive">
+                <table border="1" class="table table-striped table-bordered">
+                    <tr>
+                        <th>ID</th>
+                        <th>Plataforma</th>
+                        <th>Correo</th>
+                        <th>Contraseña</th>
+                        <th>Perfil</th>
+                        <th>Clave</th>
+                        <th>Tiempo en Días</th>
+                        <th>Fecha de Inicio</th>
+                        <th>Fecha de Culminación</th>
+                    </tr>
+                    {% for r in carrito %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ r.nom_pla }}</td>
+                        <td>{{ r.correo }}</td>
+                        <td>{{ r.password }}</td>
+                        <td>{{ r.perfil }}</td>
+                        <td>{{ r.clave }}</td>
+                        <td>{{ r.tiempo }}</td>
+                        <td>{{ r.dateinicio }}</td>
+                        <td>{{ r.datefin }}</td>
+                        <td>
+                            <a href="{{ url_for('borrar1ventas', index=loop.index0) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table><br><br>
+            </div>
+            
 
 
             <label for="nom">Cliente:</label><br>
