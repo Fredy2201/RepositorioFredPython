@@ -56,8 +56,8 @@ def form1ventas():
     if "datos_for" not in session:
             session["datos_for"] = []
 
-    totalcob = sum(Decimal(str(item["moncob"])) for item in session["carrito"])
-    totalpag = sum(Decimal(str(item["monpag"])) for item in session["carrito"])
+    totalcob = sum(Decimal(str(item.get("mon_cob",0))) for item in session["carrito"])
+    totalpag = sum(Decimal(str(item.get("mon_pag",0))) for item in session["carrito"])
 
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
@@ -107,8 +107,8 @@ def form1ventas():
                 item["dateinicio"], 
                 item["datefin"], 
                 1,   # cond_cue
-                item["moncob"],
-                item["monpag"],
+                item["mon_cob"],
+                item["mon_pag"],
             ))
 
         
