@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte por días</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    {% include "menufechas.html" %}
+    <form action=""  method="POST">
+        <label for="mes">Escoge el mes:</label><br>
+        <input type="month" name="mes"><br>
+        <input type="submit" class="btn btn-primary"><br>
+
+    </form>
+
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div id="chart2" class="chart"></div>
+            </div>
+        </div>
+
+    </div>
+    <a href="/reportesplataformas">Volver a menú de reportes</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js"></script>
+    <script>
+        var dias = {{ dias | tojson }};
+        var totales = {{ totales | tojson }};
+        const getOptionChart2=()=>{
+            let dataAxis = dias;
+        // prettier-ignore
+        let data = totales;
+        let yMax = 500;
+        let dataShadow = [];
+        for (let i = 0; i < data.length; i++) {
+            dataShadow.push(yMax);
+        }
+        return {
+            title: {
+                text: '特性示例：渐变色 阴影 点击缩放',
+                subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
+            },
+            xAxis: {
+                data: dataAxis,
+                axisLabel: {
+                inside: false,
+                color: '#000'
+                },
+                axisTick: {
+                show: true
+                },
+                axisLine: {
+                show: true
+                },
+                z: 10
+            },
+            yAxis: {
+                axisLine: {
+                show: false
+                },
+                axisTick: {
+                show: false
+                },
+                axisLabel: {
+                color: '#999'
+                }
+            },
+            dataZoom: [
+                {
+                type: 'inside'
+                }
+            ],
+            series: [
+                {
+                type: 'bar',
+                showBackground: true,
+                label: {
+                    show: true,          // 👈 activa el label
+                    position: 'top',     // 👈 posición arriba de la barra
+                    color: '#000',       // 👈 color del número
+                    fontWeight: 'bold'   // opcional: negrita
+                },
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: '#83bff6' },
+                    { offset: 0.5, color: '#188df0' },
+                    { offset: 1, color: '#188df0' }
+                    ])
+                },
+                emphasis: {
+                    itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#2378f7' },
+                        { offset: 0.7, color: '#2378f7' },
+                        { offset: 1, color: '#83bff6' }
+                    ])
+                    }
+                },
+                data: data
+                }
+            ]
+        };
+        // Enable data zoom when user click bar.
+        const zoomSize = 6;
+        myChart.on('click', function (params) {
+        console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+        myChart.dispatchAction({
+            type: 'dataZoom',
+            startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+            endValue:
+            dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+        });
+        });
+        };
+        const initCharts=()=>{
+            const chart2=echarts.init(document.getElementById("chart2"))
+
+            
+            chart2.setOption(getOptionChart2());
+        };
+
+        window.addEventListener('load',()=>{
+            initCharts();
+        });
+    </script>
+</body>
+</html>

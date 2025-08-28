@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    
-    <h4>Ingresos por plataformas</h4>
+    <a href="/reporte_general" class="btn btn-warning">Reporte general</a>
+    <a href="/reporte_fechas" class="btn btn-warning">Reporte por fechas</a>
+    <a href="" class="btn btn-warning">Reporte por cliente</a>
+    <a href="" class="btn btn-warning">Reporte por plataforma</a>
+
+    <h4>Ingresos totales</h4>
     <p>S/. {{ ingresos[0] }} </p>
-    <h4>Cobros por plataformas</h4>
+    <h4>Cobros totales</h4>
     <p>S/. {{ ingresos[1] }} </p>
-    <h3>Ganancia Neta</h3>
+    <h4>Ganancia Neta</h4>
     <p>S/. {{ ingresos[0] - ingresos[1] }}</p>
     <br><br>
 

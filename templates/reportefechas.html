@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte por fechas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    {% include "menufechas.html" %}
+
+    <div class="container p-5">
+        <form action="" method="post">
+            <label for="mes1">Desde: </label>
+            <input type="month" class="form-control" name="mes1">
+            <label for="mes2"> a </label>
+            <input type="month" class="form-control" name="mes2"><br>
+            <input type="submit" class="btn btn-primary">
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div id="chart1" class="chart"></div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div id="chart2" class="chart"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <a href="/reportesplataformas">Volver a menú de reportes</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js"></script>
+    <script>
+        var meses = {{ meses | tojson }};
+        var totales = {{ totales | tojson }};
+        const getOptionChart1=()=>{
+    
+        return {
+            xAxis: {
+                type: 'category',
+                data: meses
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: totales,
+                    type: 'bar',
+                    label: {
+                        show: true,       // Muestra los números
+                        position: 'top',  // Los coloca encima de cada barra
+                        color: '#000',    // (Opcional) Color del texto
+                        fontWeight: 'bold'
+                    }
+                }
+            ]
+            };
+    };
+    const initCharts=()=>{
+        const chart1=echarts.init(document.getElementById("chart1"))
+
+        chart1.setOption(getOptionChart1());
+        chart2.setOption(getOptionChart2());
+    };
+
+    window.addEventListener('load',()=>{
+        initCharts();
+    });
+    </script>
+</body>
+</html>

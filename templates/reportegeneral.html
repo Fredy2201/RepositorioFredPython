@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte General</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Concepto</th>
+            <th>Cantidad</th>
+        </tr>
+        <tr>
+            <td>
+                Ventas
+            </td>
+            <td class="text-end">
+                {{ ventas }}
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                Clientes
+            </td>
+            <td class="text-end">
+                {{ clientes }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Plataformas
+            </td>
+            <td class="text-end">
+                {{ plataformas }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Cuentas Totales
+            </td>
+            <td class="text-end">
+                {{ cuentas }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Cuentas Activas
+            </td>
+            <td class="text-end">
+                {{ cuentasact }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Cuentas Inactivas
+            </td>
+            <td class="text-end">
+                {{ cuentasina }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Notificaciones
+            </td>
+            <td class="text-end">
+                {{ notificaciones }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Tipo Notificaciones
+            </td>
+            <td class="text-end">
+                {{ tipnotificacion }}
+            </td>
+        </tr>
+    </table>
+    <a href="/reportesplataformas">Volver a menú de reportes</a>
+</body>
+</html>

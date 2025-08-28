@@ -31,6 +31,8 @@
                         <th>Tiempo en Días</th>
                         <th>Fecha de Inicio</th>
                         <th>Fecha de Culminación</th>
+                        <th>Monto Cobrado</th>
+                        <th>Monto Pagado</th>
                     </tr>
                     {% for r in carrito %}
                     <tr>
@@ -43,11 +45,26 @@
                         <td>{{ r.tiempo }}</td>
                         <td>{{ r.dateinicio }}</td>
                         <td>{{ r.datefin }}</td>
+                        <td class="text-end">S/. {{ r.moncob }}</td>
+                        <td class="text-end">S/. {{ r.monpag }}</td>
                         <td>
                             <a href="{{ url_for('borrar1ventas', index=loop.index0) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
                         </td>
                     </tr>
                     {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Totales: </td>
+                        <td class="text-end">S/. {{ totalcob }}</td>
+                        <td class="text-end">S/. {{ totalpag }}</td>
+                    </tr>
                 </table><br><br>
             </div>
             
@@ -70,12 +87,9 @@
 
             
             
+            <input type="hidden" value="{{ totalcob }}" id="mon_cob" name="mon_cob" step="any" pattern="^\d+(\.\d{1,2})?$" class="form-control"><br>
 
-            <label for="mon_cob">Monto cobrado:</label><br>
-            <input type="number" id="mon_cob" name="mon_cob" step="any" pattern="^\d+(\.\d{1,2})?$" class="form-control"><br>
-
-            <label for="mon_pag">Monto pagado:</label><br>
-            <input type="number" id="mon_pag" name="mon_pag" step="any" pattern="^\d+(\.\d{1,2})?$" class="form-control"><br>
+            <input type="hidden" value="{{ totalpag }}" id="mon_pag" name="mon_pag" step="any" pattern="^\d+(\.\d{1,2})?$" class="form-control"><br>
 
             <button type="submit" class="btn btn-primary">Guardar</button><br><br>
             <a href="/registrosventas" >Ver Registros</a>
@@ -95,7 +109,7 @@
             
                     <label for="plataforma">Plataforma:</label><br>
                     <select name="plataforma" id="plataforma" required class="form-select">
-                        <option value="">-- Selecciona una categoría --</option>
+                        <option value="">-- Selecciona una plataforma --</option>
                         {% for reg in plataformas %}
                         <option value="{{ reg[0] }}|{{ reg[1] }}">{{ reg[1] }}</option>
                         {% endfor %}
@@ -123,7 +137,15 @@
             
                     <label for="datefin">Fecha de Culminación:</label><br>
                     <input type="date" name="datefin" required class="form-control"><br>
+
+                    <label for="moncob">Monto Cobrado:</label><br>
+                    <input input type="number" step="0.01" name="moncob" required class="form-control"><br>
+
+                    <label for="monpag">Monto Pagado:</label><br>
+                    <input input type="number" step="0.01" name="monpag" required class="form-control"><br>
+
                     <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+
                     <a href="/registroscuentas">Ver Registros</a>
                 </form>
             </div>

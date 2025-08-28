@@ -23,16 +23,18 @@
         <table border="1" class="table table-bordered table-striped">
             <tr>
                 <th>ID</th>
-                <th>Código cuenta</th>
+                <th>Cód cuenta</th>
                 <th>Plataforma</th>
-                <th>Codigo de venta</th>
+                <th>Cód de venta</th>
                 <th>Correo</th>
                 <th>Contraseña</th>
                 <th>Perfil</th>
                 <th>Clave</th>
-                <th>Tiempo en Días</th>
+                <th>Días</th>
                 <th>Fecha de Inicio</th>
-                <th>Fecha de Culminación</th>
+                <th>Fecha de Cul.</th>
+                <th>Cobrado (S/.)</th>
+                <th>Pagado (S/.)</th>
                 <th>Días restantes</th>
             </tr>
             {% for r in registros %}
@@ -48,7 +50,10 @@
                 <td>{{ r[7] }}</td>
                 <td>{{ r[8] }}</td>
                 <td>{{ r[9] }}</td>
-                <td>{{ r[11] }}</td>
+                <td class="text-end">{{ r[11] }}</td>
+                <td class="text-end">{{ r[12] }}</td>
+                <td class="text-end">{{ r[13] }}</td>
+
                 <td>
                     <a href="/editarcuentas/{{ r[0] }}" class="btn btn-warning">Editar</a> |
                     <a href="/borrarcuentas/{{ r[0] }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>

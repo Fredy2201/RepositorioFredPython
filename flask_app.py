@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import timedelta
+from decimal import Decimal
+from datetime import datetime
 import sqlite3
 
 app = Flask(__name__)
@@ -54,7 +56,8 @@ def form1ventas():
     if "datos_for" not in session:
             session["datos_for"] = []
 
-
+    totalcob = sum(Decimal(str(item["moncob"])) for item in session["carrito"])
+    totalpag = sum(Decimal(str(item["monpag"])) for item in session["carrito"])
 
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
@@ -89,8 +92,8 @@ def form1ventas():
         for item in carrito:
             c.execute("""
                 INSERT INTO cuentas 
-                (cod_pla, cod_ven, correo, password, perfil, clave, tiempo, fec_ini, fec_cul, cond_cue) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (cod_pla, cod_ven, correo, password, perfil, clave, tiempo, fec_ini, fec_cul, cond_cue, cob, pag) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 item["id_pla"], 
                 codigoalto+1, 
@@ -102,6 +105,8 @@ def form1ventas():
                 item["dateinicio"], 
                 item["datefin"], 
                 1,   # cond_cue
+                item["moncob"],
+                item["monpag"],
             ))
 
         
@@ -113,7 +118,7 @@ def form1ventas():
         return redirect("/registrosventas")  # Redirigir después de guardar
 
     # Mostrar formulario
-    return render_template("formulario1_ventas.html", registros=clientes, carrito=session["carrito"], plataformas=plataformas, datos_for=session["datos_for"])
+    return render_template("formulario1_ventas.html", registros=clientes, carrito=session["carrito"], plataformas=plataformas, datos_for=session["datos_for"],totalcob=totalcob,totalpag=totalpag)
 
 @app.route("/agregar_servicio", methods=["POST"])
 def agregarservicio():
@@ -128,6 +133,11 @@ def agregarservicio():
     tiempo=request.form["tiempo"]
     dateinicio=request.form["dateinicio"]
     datefin=request.form["datefin"]
+    moncob=request.form["moncob"]
+    monpag=request.form["monpag"]
+
+    moncob = Decimal(moncob).quantize(Decimal("0.00"))
+    monpag = Decimal(monpag).quantize(Decimal("0.00"))
 
     item={
         "id_pla": id_pla,
@@ -138,7 +148,9 @@ def agregarservicio():
         "clave": clave,
         "tiempo": tiempo,
         "dateinicio":dateinicio,
-        "datefin": datefin
+        "datefin": datefin,
+        "moncob": moncob,
+        "monpag": monpag
     }
     carrito = session.get("carrito", [])
     carrito.append(item)
@@ -383,7 +395,7 @@ def registroscuentas():
     
     conn = sqlite3.connect("data.db")
     c = conn.cursor()
-    c.execute("SELECT cuentas.cod_cue,plataformas.nom_pla,cuentas.cod_ven,cuentas.correo,cuentas.password,cuentas.perfil,cuentas.clave,cuentas.tiempo,cuentas.fec_ini,cuentas.fec_cul,cuentas.cond_cue, ROUND(julianday(cuentas.fec_cul) - julianday('now')) AS dias_restantes FROM cuentas,plataformas where cond_cue=1 AND cuentas.cod_pla=plataformas.cod_pla ORDER BY cod_cue DESC")
+    c.execute("SELECT cuentas.cod_cue,plataformas.nom_pla,cuentas.cod_ven,cuentas.correo,cuentas.password,cuentas.perfil,cuentas.clave,cuentas.tiempo,cuentas.fec_ini,cuentas.fec_cul,cuentas.cond_cue, cob, pag, ROUND(julianday(cuentas.fec_cul) - julianday(date('now'))) AS dias_restantes FROM cuentas,plataformas where cond_cue=1 AND cuentas.cod_pla=plataformas.cod_pla ORDER BY cod_cue DESC")
     datos = c.fetchall()
     conn.close()
     return render_template("registros_cuentas.html", registros=datos)
@@ -789,9 +801,107 @@ def borrarplataformas(id):
     return redirect("/registrosplataformas")
 
 
-#ENVIAR NOTIFICACIONES
+#REPORTES
 
+@app.route("/reporte_general")
+def reportegeneral():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
 
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) from ventas WHERE cond_ven=1")
+    ventas = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) from clientes WHERE cond_cli=1")
+    clientes = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) from plataformas WHERE cond_pla=1")
+    plataformas = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) from cuentas WHERE cond_cue=1")
+    cuentas = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) AS cantidad FROM cuentas WHERE (JULIANDAY(fec_cul) - JULIANDAY(date('now'))) > -1 and cond_cue=1;")
+    cuentasact = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) AS cantidad FROM cuentas WHERE (JULIANDAY(fec_cul) - JULIANDAY(date('now'))) < 0 and cond_cue=1;")
+    cuentasina = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) from notificaciones WHERE cond_not=1")
+    notificaciones = c.fetchone()[0]
+
+    c.execute("SELECT COUNT(*) from tiponotificacion WHERE cond_tip_not=1")
+    tipnotificacion = c.fetchone()[0]
+
+    conn.close()
+
+    return render_template("reportegeneral.html", ventas=ventas, clientes=clientes, plataformas=plataformas, cuentas=cuentas, cuentasact=cuentasact, cuentasina=cuentasina, notificaciones=notificaciones, tipnotificacion=tipnotificacion)
+
+@app.route("/reporte_fechas", methods=["GET", "POST"])
+def reportefechas():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+
+    # Si viene POST, filtrar por rango
+    if request.method == "POST":
+        mes1 = request.form["mes1"]
+        mes2 = request.form["mes2"]
+
+        c.execute("""
+            SELECT strftime('%Y-%m', fec_ven) AS mes, 
+                   SUM(cobro-pago) AS total_ventas 
+            FROM ventas 
+            WHERE cond_ven=1
+              AND strftime('%Y-%m', fec_ven) BETWEEN ? AND ? 
+            GROUP BY mes 
+            ORDER BY mes LIMIT 10
+        """, (mes1, mes2))
+    else:
+        # Si es GET, mostrar todo
+        c.execute("""
+            SELECT strftime('%Y-%m', fec_ven) AS mes, 
+                   SUM(cobro-pago) AS total_ventas 
+            FROM ventas 
+            GROUP BY mes 
+            ORDER BY mes LIMIT 10
+        """)
+
+    ventas = c.fetchall()
+    conn.close()
+
+    meses = [r[0] for r in ventas]
+    totales = [r[1] for r in ventas]
+
+    return render_template("reportefechas.html", meses=meses, totales=totales)
+
+@app.route("/reporte_dias", methods=["GET", "POST"])
+def reportedias():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+    mesactual= datetime.now()
+    mesa= mesactual.strftime("%Y-%m")
+
+    if request.method == "POST":
+        mes = request.form["mes"]
+
+        c.execute("SELECT strftime('%d', fec_ven) AS dia, SUM(cobro - pago) AS total FROM ventas WHERE strftime('%Y-%m', fec_ven) = ? GROUP BY strftime('%d', fec_ven) ORDER BY dia;", (mes,))
+    else:
+        # Si es GET, mostrar todo
+        c.execute("SELECT strftime('%d', fec_ven) AS dia, SUM(cobro - pago) AS total FROM ventas WHERE strftime('%Y-%m', fec_ven) = ? GROUP BY strftime('%d', fec_ven) ORDER BY dia;", (mesa,))
+
+    ventas = c.fetchall()
+    conn.close()
+
+    dias = [r[0] for r in ventas]
+    totales = [r[1] for r in ventas]
+
+    return render_template("reportefechasdias.html", dias=dias, totales=totales)
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
 #DESDE AQUI SE HACE PARA TRANSPORTE
