@@ -151,8 +151,8 @@ def agregarservicio():
         "tiempo": tiempo,
         "dateinicio":dateinicio,
         "datefin": datefin,
-        "moncob": moncob,
-        "monpag": monpag
+        "mon_cob": moncob,
+        "mon_pag": monpag
     }
     carrito = session.get("carrito", [])
     carrito.append(item)

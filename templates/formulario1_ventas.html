@@ -45,8 +45,8 @@
                         <td>{{ r.tiempo }}</td>
                         <td>{{ r.dateinicio }}</td>
                         <td>{{ r.datefin }}</td>
-                        <td class="text-end">S/. {{ r.moncob }}</td>
-                        <td class="text-end">S/. {{ r.monpag }}</td>
+                        <td class="text-end">S/. {{ r.mon_cob }}</td>
+                        <td class="text-end">S/. {{ r.mon_pag }}</td>
                         <td>
                             <a href="{{ url_for('borrar1ventas', index=loop.index0) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
                         </td>
