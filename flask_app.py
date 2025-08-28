@@ -63,6 +63,8 @@ def form1ventas():
     c = conn.cursor()
     c.execute("SELECT MAX(cod_ven) as codalto FROM ventas where cond_ven=1")
     codigoalto = c.fetchone()[0]
+    if codigoalto is None:
+        codigoalto = 0
 
     c.execute("SELECT * FROM clientes where cond_cli=1 ORDER BY nom_cli asc")
     clientes = c.fetchall()
@@ -75,8 +77,8 @@ def form1ventas():
     if request.method == "POST":
         nom = request.form["nom"]
         fecha = request.form["date"]
-        mon_cob=request.form["mon_cob"]
-        mon_pag=request.form["mon_pag"]
+        mon_cob=float(request.form["mon_cob"])
+        mon_pag=float(request.form["mon_pag"])
         cond_ven=1
 
         conn = sqlite3.connect("data.db")
