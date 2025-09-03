@@ -12,14 +12,22 @@
     <div class="container d-flex justify-content-center align-items-center vh-100" >
 
         
-        <div class="bg-white p-4 rounded shadow w-100" style="max-width: 600px;">
+        <div class=" bg-white p-4 rounded shadow w-100" style="max-width: 600px;">
             <h3 class="text-center">BIENVENIDO {{ usuario['username'] }}</h3>
-            <p>Escoge a que sistema de informacón deseas ingresar.</p>
+            <p>Escoge a que sistema de información deseas ingresar.</p>
             
-            <div class="d-flex justify-content-center gap-4 mt-4">
-                <a href="/tregistrosservicios" class="btn btn-success">Transporte</a>
-                <a href="/registrosventas" class="btn btn-success">Plataformas Streaming</a>
-                <a href="/lmregistros" class="btn btn-success">Cuentas Personales</a>
+            <div class="row ">
+                <div class="col-4">
+                    <a href="/tregistrosservicios" class="btn btn-success">Sistema Transporte</a>
+                </div>
+                <div class="col-4">
+                    <a href="/registrosventas" class="btn btn-success">Plataformas Streaming</a>
+                </div>
+                <div class="col-4">
+                    <a href="/lmregistros" class="btn btn-success">Cuentas Personales</a>
+                </div>
+                
+                
             </div>
             <br>
             <div class="d-flex justify-content-center">
