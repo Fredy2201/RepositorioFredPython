@@ -14,7 +14,9 @@
             <div class="col-12 mb-3">
                 <h4 class="text-center">GASTOS GENERALES</h4>
             </div>
+            
             <form action="" class="col-12 col-sm-12 col-lg-4 col-xl-3" method="post">
+                <br>
                 <h5>Ingrese registros de gastos</h5>
                 <label for="des">Ingrese Descripción</label>
                 <input type="text" name="des" id="" class="form-control"><br>
@@ -25,29 +27,33 @@
                 <input type="submit" value="Registrar" class="btn btn-primary">
             </form>
             <div class="col-12 col-sm-12 col-lg-8 col-xl-9">
+                <br>
                 <h5 class="text-center">Registros de los gastos</h5>
-                <table class="table table-striped table-bordered">
-                    <tr>
-                        <th class="text-center">N°</th>
-                        <th class="text-center">Código</th>
-                        <th class="text-center">Descripción</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Monto(S/.)</th>
-                    </tr>
-                    {% for r in datos %}
-                    <tr>
-                        <td class="text-center">{{ loop.index }}</td>
-                        <td class="text-center">{{ r[0] }}</td>
-                        <td >{{ r[1] }}</td>
-                        <td class="text-end">{{ r[2] }}</td>
-                        <td class="text-end">{{ r[3] }}</td>
-                        <td>
-                            <a href="{{ url_for('lm.lmeditargastos', id=r[0]) }}" class="btn btn-warning">Editar</a> |
-                            <a href="{{ url_for('lm.lmborrargastos', id=r[0]) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th class="text-center">N°</th>
+                            <th class="text-center">Código</th>
+                            <th class="text-center">Descripción</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Monto(S/.)</th>
+                        </tr>
+                        {% for r in datos %}
+                        <tr>
+                            <td class="text-center">{{ loop.index }}</td>
+                            <td class="text-center">{{ r[0] }}</td>
+                            <td >{{ r[1] }}</td>
+                            <td class="text-end">{{ r[2] }}</td>
+                            <td class="text-end">{{ r[3] }}</td>
+                            <td>
+                                <a href="{{ url_for('lm.lmeditargastos', id=r[0]) }}" class="btn btn-warning">Editar</a> |
+                                <a href="{{ url_for('lm.lmborrargastos', id=r[0]) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
             <div class="col-12 m-5">
                 <a href="/ini">Volver a menú</a>
