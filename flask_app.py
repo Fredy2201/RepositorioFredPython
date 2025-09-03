@@ -3,6 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from datetime import datetime
 import sqlite3
+from lm import lm_bp
 
 app = Flask(__name__)
 app.secret_key="f84b2a5c1e764eac9c2d8b9c1fb13e7a"
@@ -12,7 +13,7 @@ app.secret_key="f84b2a5c1e764eac9c2d8b9c1fb13e7a"
 def inicio():
     return redirect("/login")
 
-
+app.register_blueprint(lm_bp, url_prefix="/lmregistros")
 
 
 # Ruta principal con formulario
@@ -164,6 +165,9 @@ def agregarservicio():
 
 @app.route("/borrar1ventas/<int:index>")
 def borrar1ventas(index):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
     carrito = session.get("carrito", [])
     if 0 <= index < len(carrito):
         del carrito[index]
@@ -193,8 +197,8 @@ def form1clientes():
 # Mostrar registros
 @app.route("/registrosventas")
 def registros():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
+    if "usuario" not in session or session["usuario"]["rol"] != 5:
+        return redirect(url_for('inicio1'))
     
 
     conn = sqlite3.connect("data.db")
@@ -912,9 +916,10 @@ def reportedias():
 
 @app.route("/tregistrosservicios")
 def tregistrosservicios():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
+    if "usuario" not in session or session["usuario"]["rol"] != 5:
+        return redirect(url_for('inicio1'))
     
+
     conn = sqlite3.connect("data1.db")
     c = conn.cursor()
     c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
@@ -923,6 +928,8 @@ def tregistrosservicios():
     datos = c.fetchall()
     conn.close()
     return render_template("tregistros_servicios.html", registros=datos)
+
+
 
 @app.route("/tformservicios", methods=["GET", "POST"])
 def tformservicios():
@@ -1358,6 +1365,7 @@ def tborrarcobros(id):
 def inicio1():
     if 'usuario' in session:
         return render_template("menuprincipal.html", usuario=session['usuario'])
+    
     return redirect(url_for('login'))
 
 
@@ -1374,7 +1382,11 @@ def login():
         conn.close()
 
         if usuario:
-            session['usuario'] = username
+            session['usuario'] = {
+            "id": usuario[0],
+            "username": usuario[1],
+            "rol": usuario[3]
+            }
             return redirect("/ini")
         else:
             return "Usuario o contraseña incorrectos"
@@ -1383,7 +1395,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('usuario', None)
+    session.pop('usuario5', None)
+    session.clear()
     return redirect(url_for('login'))
 
 if __name__ == "__main__":
