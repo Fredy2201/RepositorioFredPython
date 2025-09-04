@@ -29,43 +29,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Transporte</a>
-    
-            <!-- Botón hamburguesa -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuResponsive" aria-controls="menuResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
-        <!-- Opciones del menú -->
-            <div class="collapse navbar-collapse" id="menuResponsive">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link " href="/tregistrosservicios">Servicios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/tregistrosclientes">Clientes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="/tregistrosgastos">Gastos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/tregistrosdeudas">Deudas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/tregistroscobros">Cobros Pendientes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/ini">Menú</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">Cerrar Sesión</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include "tmenu.html" %}
 
     <h3 class="text-center">Registros de los Clientes</h3>
     <a href="/tformclientes" class="btn btn-primary ms-5">Agregar Nuevo Registro</a><br><br>

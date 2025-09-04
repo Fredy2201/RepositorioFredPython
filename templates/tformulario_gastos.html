@@ -19,6 +19,14 @@
         
         <form method="POST" class="formulario">
             <h3 class="text-center">Agregar Registro de Gastos</h3>
+            <label for="cat">Escoge una opción: </label>
+                <select name="cat" id="cat" required class="form-select">
+                    <option value="">Seleccione Categoría</option>
+                    {% for reg in categoria %}
+                    <option value="{{ reg[0] }}">{{ reg[1] }}</option>
+                    {% endfor %}
+                </select>
+                <a href="{{ url_for('tcategorias') }}">Añadir nueva categoria</a><br><br>
             <label for="des">Descripción de gastos:</label><br>
             <input type="text" name="des" required class="form-control"><br>
             <label for="fec">Fecha:</label><br>

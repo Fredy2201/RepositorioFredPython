@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import timedelta
-from decimal import Decimal
-from datetime import datetime
+from decimal import Decimal, ROUND_HALF_UP
+from datetime import datetime, date
 import sqlite3
 from lm import lm_bp
 
@@ -1116,9 +1116,7 @@ def tregistrosgastos():
     
     conn = sqlite3.connect("data1.db")
     c = conn.cursor()
-    c.execute("""SELECT * 
-              FROM gastos 
-              WHERE cond_gas=1 ORDER BY cod_gas DESC""")
+    c.execute("SELECT gastos.cod_gas, gastos.des_gas, gastos.fec_gas, cat_gas.nom_cat, gastos.monto FROM gastos, cat_gas where cond_gas=1 and cat_gas.cod_cat=gastos.cod_cat ORDER BY fec_gas DESC")
     datos = c.fetchall()
     conn.close()
     return render_template("tregistros_gastos.html", registros=datos)
@@ -1128,21 +1126,30 @@ def tformgastos():
     if 'usuario' not in session:
         return redirect(url_for('login'))
     
-   
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM cat_gas where cond_cat=1 ORDER BY nom_cat ASC")
+    categoria = c.fetchall()
+
+    conn.close()
+
     if request.method == "POST":
-        des=request.form["des"]
-        fec=request.form["fec"]
-        mon = request.form["mon"]
-        cond_gas=1
+        cat=request.form["cat"]
+        des = request.form["des"]
+        fec = request.form["fec"]
+        mon=Decimal(request.form["mon"]).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        mon=str(mon)
+        cond=1
 
         conn = sqlite3.connect("data1.db")
         c = conn.cursor()
-        c.execute("INSERT INTO gastos (des_gas, fec_gas, monto, cond_gas) VALUES (?, ?, ?, ?)", (des, fec, mon, cond_gas))
+        c.execute("INSERT INTO gastos (des_gas, fec_gas, cod_cat, monto, cond_gas) VALUES (?, ?, ?, ?, ?)", (des, fec, cat, mon,  cond))
         conn.commit()
         conn.close()
 
         return redirect("/tregistrosgastos")  # Redirigir después de guardar
-    return render_template("tformulario_gastos.html")
+    return render_template("tformulario_gastos.html", categoria=categoria)
 
 @app.route("/teditargastos/<int:id>", methods=["GET", "POST"])
 def teditargastos(id):
@@ -1357,6 +1364,68 @@ def tborrarcobros(id):
     conn.commit()
     conn.close()
     return redirect("/tregistroscobros")
+
+@app.route("/tcategorias", methods=["GET", "POST"])
+def tcategorias():
+    if "usuario" not in session :
+        return redirect(url_for('inicio1'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM cat_gas where cond_cat=1 ORDER BY fec_cat DESC")
+    datos = c.fetchall()
+    conn.close()
+
+    if request.method == "POST":
+        nom = request.form["nom"]
+        hoy = date.today()
+        fecha_formateada = hoy.strftime("%Y-%m-%d")
+        cond=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO cat_gas (nom_cat, fec_cat, cond_cat) VALUES (?, ?, ?)", (nom, fecha_formateada, cond))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("tcategorias"))  # Redirigir después de guardar
+
+    return render_template("tcategorias.html", datos=datos)    
+
+@app.route("/teditarcategoriasgastos/<int:id>", methods=["GET", "POST"])
+def teditarcategoriasgastos(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM cat_gas WHERE cod_cat = ?", (id,))
+    registro = c.fetchone()
+    conn.close()
+    if request.method == "POST":
+        nom = request.form["nom"]
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("UPDATE cat_gas SET nom_cat= ? WHERE cod_cat = ?", (nom, id))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("tcategorias"))  # Redirigir después de guardar
+    return render_template("teditarcategoriasgastos.html", registro=registro)
+
+
+@app.route("/tborrarcategoriasgastos/<int:id>")
+def tborrarcategoriasgastos(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("UPDATE cat_gas SET cond_cat=0 WHERE cod_cat = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for("tcategorias"))
 
 #----------------------------------------------------------------------------------------------------------
 #TRABAJANDO CON EL LOGIN
