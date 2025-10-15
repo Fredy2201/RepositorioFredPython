@@ -7,7 +7,7 @@ const getOptionChart1 = async () => {
     // Devuelve la configuración del gráfico con los datos reales
     return {
         title: {
-            text: 'Referer of a Website',
+            text: 'Gastos de este Mes',
             subtext: 'Datos desde Flask',
             left: 'center'
         },
@@ -24,6 +24,10 @@ const getOptionChart1 = async () => {
                 type: 'pie',
                 radius: '50%',
                 data: datos,  // 👈 datos recibidos de Flask
+                label: {
+                    show: true, // 1. Muestra la etiqueta
+                    formatter: ' {c} ({d}%)' // 2. Define el formato del contenido
+                },
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
