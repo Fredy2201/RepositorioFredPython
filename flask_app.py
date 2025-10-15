@@ -4,6 +4,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from datetime import datetime, date
 import sqlite3
 from lm import lm_bp
+from flask import jsonify
 
 app = Flask(__name__)
 app.secret_key="f84b2a5c1e764eac9c2d8b9c1fb13e7a"
@@ -1116,7 +1117,7 @@ def tregistrosgastos():
     
     conn = sqlite3.connect("data1.db")
     c = conn.cursor()
-    c.execute("SELECT gastos.cod_gas, gastos.des_gas, gastos.fec_gas, cat_gas.nom_cat, gastos.monto FROM gastos, cat_gas where cond_gas=1 and cat_gas.cod_cat=gastos.cod_cat ORDER BY fec_gas DESC")
+    c.execute("SELECT gastos.cod_gas, gastos.des_gas, gastos.fec_gas, cat_gas.nom_cat, gastos.monto FROM gastos, cat_gas where cond_gas=1 and cat_gas.cod_cat=gastos.cod_cat ORDER BY fec_gas DESC, gastos.cod_gas DESC")
     datos = c.fetchall()
     conn.close()
     return render_template("tregistros_gastos.html", registros=datos)
@@ -1426,6 +1427,36 @@ def tborrarcategoriasgastos(id):
     conn.commit()
     conn.close()
     return redirect(url_for("tcategorias"))
+
+@app.route("/tresumen")
+def tresumen():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("select  nom_cat, SUM(monto), gastos.cod_cat from gastos, cat_gas  where gastos.cod_cat = cat_gas.cod_cat and cond_gas=1 and strftime('%Y-%m', fec_gas) = strftime('%Y-%m', 'now') GROUP BY gastos.cod_cat")
+    datos = c.fetchall()
+    conn.close()
+    return render_template("tresumen.html", datos=datos)
+
+@app.route("/datos_tresumen")
+def datos_tresumen():
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("""
+        SELECT nom_cat, SUM(monto)
+        FROM gastos, cat_gas  
+        WHERE gastos.cod_cat = cat_gas.cod_cat 
+        AND cond_gas = 1 
+        AND strftime('%Y-%m', fec_gas) = strftime('%Y-%m', 'now')
+        GROUP BY gastos.cod_cat
+    """)
+    filas = c.fetchall()
+    conn.close()
+
+    # Convertir los datos a formato JSON legible por ECharts
+    datos = [{"name": fila[0], "value": fila[1]} for fila in filas]
+    return jsonify(datos)
 
 #----------------------------------------------------------------------------------------------------------
 #TRABAJANDO CON EL LOGIN
