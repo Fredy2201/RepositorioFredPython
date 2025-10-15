@@ -15,8 +15,9 @@ const getOptionChart1 = async () => {
             trigger: 'item'
         },
         legend: {
-            orient: 'vertical',
-            left: 'left'
+            orient: 'horizontal',
+            bottom: 0,
+            left: 'center'
         },
         series: [
             {
