@@ -915,22 +915,50 @@ def reportedias():
 #----------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------
 
+#ESTA PARTE USO PARA CONSULTAR LOS DATOS DE SERVICIOS
 @app.route("/tregistrosservicios")
 def tregistrosservicios():
     if "usuario" not in session or session["usuario"]["rol"] != 5:
         return redirect(url_for('inicio1'))
-    
 
     conn = sqlite3.connect("data1.db")
+    conn.row_factory = sqlite3.Row
     c = conn.cursor()
+
     c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
               FROM servicios,clientes 
               WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli ORDER BY cod_ser DESC""")
     datos = c.fetchall()
+    c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
+              FROM servicios,clientes 
+              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli and fec_ser= DATE('now', 'localtime') ORDER BY cod_ser DESC""")
+    datos1 = c.fetchall()
     conn.close()
-    return render_template("tregistros_servicios.html", registros=datos)
+    return render_template("tregistros_servicios.html", registros=datos, datos1=datos1)
 
+@app.route('/api/tregistrosservicios')
+def api_tregistros_servicios():
+    inicio = request.args.get('inicio')
+    fin = request.args.get('fin')
 
+    conn = sqlite3.connect('data1.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
+        FROM servicios,clientes
+        WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli
+          AND DATE(fec_ser) BETWEEN ? AND ?
+        ORDER BY fec_ser DESC
+    """, (inicio, fin))
+
+    resultados = [dict(fila) for fila in cursor.fetchall()]
+    conn.close()
+
+    return jsonify(resultados)
+
+#HASTA ACA SE UTILIZA EL CODIGO PARA SERVICIOS 
 
 @app.route("/tformservicios", methods=["GET", "POST"])
 def tformservicios():
