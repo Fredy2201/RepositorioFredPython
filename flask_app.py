@@ -929,9 +929,10 @@ def tregistrosservicios():
               FROM servicios,clientes 
               WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli ORDER BY cod_ser DESC""")
     datos = c.fetchall()
+
     c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
               FROM servicios,clientes 
-              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli and fec_ser= DATE('now', 'localtime') ORDER BY cod_ser DESC""")
+              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli and fec_ser= DATE('now', ''-5 hours') ORDER BY cod_ser DESC""")
     datos1 = c.fetchall()
     conn.close()
     return render_template("tregistros_servicios.html", registros=datos, datos1=datos1)
