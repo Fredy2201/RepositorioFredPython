@@ -1138,7 +1138,7 @@ def tborrarclientes(id):
 
 
 
-
+#EN ESTA PARTE COMENZAMOS A PROGRAMAR LA PARTE GASTOS
 @app.route("/tregistrosgastos")
 def tregistrosgastos():
     if 'usuario' not in session:
@@ -1146,10 +1146,38 @@ def tregistrosgastos():
     
     conn = sqlite3.connect("data1.db")
     c = conn.cursor()
+
     c.execute("SELECT gastos.cod_gas, gastos.des_gas, gastos.fec_gas, cat_gas.nom_cat, gastos.monto FROM gastos, cat_gas where cond_gas=1 and cat_gas.cod_cat=gastos.cod_cat ORDER BY fec_gas DESC, gastos.cod_gas DESC")
     datos = c.fetchall()
+
+    c.execute("SELECT gastos.cod_gas, gastos.des_gas, gastos.fec_gas, cat_gas.nom_cat, gastos.monto FROM gastos, cat_gas where cond_gas=1 and cat_gas.cod_cat=gastos.cod_cat and fec_gas= DATE('now', '-5 hours') ORDER BY fec_gas DESC, gastos.cod_gas DESC")
+    datos1 = c.fetchall()
+
     conn.close()
-    return render_template("tregistros_gastos.html", registros=datos)
+    return render_template("tregistros_gastos.html", registros=datos, datos1=datos1)
+
+@app.route('/api/tregistrosgastos')
+def api_tregistros_gastos():
+    inicio = request.args.get('inicio')
+    fin = request.args.get('fin')
+
+    conn = sqlite3.connect('data1.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT gastos.cod_gas, gastos.des_gas, gastos.fec_gas, cat_gas.nom_cat, gastos.monto FROM gastos, cat_gas 
+        where cond_gas=1 and cat_gas.cod_cat=gastos.cod_cat
+        AND DATE(fec_gas) BETWEEN ? AND ?
+        ORDER BY fec_gas DESC
+    """, (inicio, fin))
+
+    resultados = [dict(fila) for fila in cursor.fetchall()]
+    conn.close()
+
+    return jsonify(resultados)
+
+# AQUI ESTAMOS TERMINANDO ESTA PARTE // ESTE CODIGO SE UTILIZA
 
 @app.route("/tformgastos", methods=["GET", "POST"])
 def tformgastos():
@@ -1470,20 +1498,36 @@ def tresumen():
 
 @app.route("/datos_tresumen")
 def datos_tresumen():
+    # ✅ 1. Obtener el mes desde el parámetro GET (ej: "2025-11")
+    mes = request.args.get("mes")
+
     conn = sqlite3.connect("data1.db")
     c = conn.cursor()
-    c.execute("""
-        SELECT nom_cat, SUM(monto)
-        FROM gastos, cat_gas  
-        WHERE gastos.cod_cat = cat_gas.cod_cat 
-        AND cond_gas = 1 
-        AND strftime('%Y-%m', fec_gas) = strftime('%Y-%m', 'now')
-        GROUP BY gastos.cod_cat
-    """)
+
+    # ✅ 2. Si el usuario no eligió mes, usamos el actual
+    if mes:
+        c.execute("""
+            SELECT nom_cat, SUM(monto)
+            FROM gastos, cat_gas  
+            WHERE gastos.cod_cat = cat_gas.cod_cat 
+            AND cond_gas = 1 
+            AND strftime('%Y-%m', fec_gas) = ?
+            GROUP BY gastos.cod_cat
+        """, (mes,))
+    else:
+        c.execute("""
+            SELECT nom_cat, SUM(monto)
+            FROM gastos, cat_gas  
+            WHERE gastos.cod_cat = cat_gas.cod_cat 
+            AND cond_gas = 1 
+            AND strftime('%Y-%m', fec_gas) = strftime('%Y-%m', 'now')
+            GROUP BY gastos.cod_cat
+        """)
+
     filas = c.fetchall()
     conn.close()
 
-    # Convertir los datos a formato JSON legible por ECharts
+    # ✅ 3. Convertir el resultado a formato JSON
     datos = [{"name": fila[0], "value": fila[1]} for fila in filas]
     return jsonify(datos)
 

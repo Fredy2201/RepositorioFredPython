@@ -1,68 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registros Guardados de Gastos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link rel="stylesheet" href="../static/style.css">
-    <style>
-        /* Estilos opcionales para que quede bonito */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        nav {
-            background-color: #333;
-            padding: 10px;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin-right: 15px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .contenido {
-            width: 90%;
-            margin: 0 auto;
-        }
-    </style>
-</head>
-<body>
-        <!-- Menú Navbar -->
-        {% include "tmenu.html" %}
+{% extends 'tlayaout.html' %} 
+{% block content %} 
 
-
+    <br>
     <h2 class="text-center">Registros de los Gastos</h2>
-    <a href="/tformgastos" class="btn btn-primary ms-5">Agregar Nuevo Registro</a><br><br>
-    <div class="table-responsive">
-        <table border="1" class="table table-striped table-bordered">
+    <a href="/tformgastos" class="btn btn-primary ms-5">Agregar Nuevo Registro</a><br>
+    <input type="button" value="Mostrar Todo" class="btn ms-5 btn-danger" id="btntodo">
+    <input type="button" value="Mostrar Hoy" class="btn ms-5 btn-danger" id="btnhoy">
+    <form id="formFechasgastos" class="d-flex gap-3 justify-content-center mb-4">
+        <div>
+            <label for="fechaInicio" class="form-label">Desde:</label>
+            <input type="date" id="fechaInicio" class="form-control" required>
+        </div>
+    
+        <div>
+            <label for="fechaFin" class="form-label">Hasta:</label>
+            <input type="date" id="fechaFin" class="form-control" required>
+        </div>
+    
+        <div class="align-self-end">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    <div id="mensajeCarga" class="text-center mb-3" style="display:none;">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Cargando datos...</p>
+    </div>
+
+    <table class="table table-striped table-bordered text-center oculto" id="tablaResultados">
+        <thead class="table-dark">
             <tr>
-                <th>ID</th>
-                <th>Código gasto</th>
+                <th>Código</th>
                 <th>Descripción</th>
                 <th>Fecha</th>
-                <th>Categoria</th>
+                <th>Categoría</th>
                 <th>Monto</th>
             </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="5">Seleccione un rango de fechas para ver los resultados</td></tr>
+        </tbody>
+    </table>
+
+    <div class="table-responsive " >
+        <table border="1" class="table table-striped table-bordered" id="table1">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Código gasto</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Categoria</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            {% for r in datos1 %}
+            <tbody>
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ r[0] }}</td>
+                    <td>{{ r[1] }}</td>
+                    <td>{{ r[2] }}</td>
+                    <td>{{ r[3] }}</td>
+                    <td class="text-end">{{ r[4] }}</td>
+                    <td>
+                        <a href="/teditargastos/{{ r[0] }}" class="btn btn-warning">Editar</a> |
+                        <a href="/tborrargastos/{{ r[0] }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        <table border="1" class="table table-striped table-bordered oculto" id="table2">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Código gasto</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Categoria</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
             {% for r in registros %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ r[0] }}</td>
-                <td>{{ r[1] }}</td>
-                <td>{{ r[2] }}</td>
-                <td>{{ r[3] }}</td>
-                <td class="text-end">{{ r[4] }}</td>
-                <td>
-                    <a href="/teditargastos/{{ r[0] }}" class="btn btn-warning">Editar</a> |
-                    <a href="/tborrargastos/{{ r[0] }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
-                </td>
-            </tr>
-            {% endfor %}
+            <tbody>
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ r[0] }}</td>
+                    <td>{{ r[1] }}</td>
+                    <td>{{ r[2] }}</td>
+                    <td>{{ r[3] }}</td>
+                    <td class="text-end">{{ r[4] }}</td>
+                    <td>
+                        <a href="/teditargastos/{{ r[0] }}" class="btn btn-warning">Editar</a> |
+                        <a href="/tborrargastos/{{ r[0] }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
     <br>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-</body>
-</html>
+    
+{% endblock %} 

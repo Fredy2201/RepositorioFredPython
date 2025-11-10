@@ -113,8 +113,9 @@ btnhoy.addEventListener('click',()=>{
 //FIN DEL CODIGO
 
 //codigo para mostrar la tabla dinamica segun fechas en el registro de servicios
-document.getElementById('formFechas').addEventListener('submit', async (e) => {
+document.getElementById('formFechas')?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
     table1.classList.add('oculto');
     table2.classList.add('oculto');
     cuerpo1.classList.remove('oculto');
@@ -157,7 +158,7 @@ document.getElementById('formFechas').addEventListener('submit', async (e) => {
             <td>${servicio.monto}</td>
             <td>
                 <a href="/teditarservicios/${servicio.cod_ser}" class="btn btn-warning">Editar</a> |
-                <a href="/tborrarservicios/${servicio.cod_ser}" class="btn btn-danger onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+                <a href="/tborrarservicios/${servicio.cod_ser}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
             </td>
             `;
             cuerpo.appendChild(fila);
@@ -171,3 +172,62 @@ document.getElementById('formFechas').addEventListener('submit', async (e) => {
 });
 
 // fin de codigo
+
+//esta parte sirve para controlar la pagina de gastos
+document.getElementById('formFechasgastos')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+   
+    table1.classList.add('oculto');
+    table2.classList.add('oculto');
+    cuerpo1.classList.remove('oculto');
+
+    const inicio = document.getElementById('fechaInicio').value;
+    const fin = document.getElementById('fechaFin').value;
+    const mensaje = document.getElementById('mensajeCarga');
+    const cuerpo = document.querySelector('#tablaResultados tbody');
+
+
+    if (!inicio || !fin) {
+        alert('Debe seleccionar ambas fechas.');
+        return;
+    }
+
+    cuerpo.innerHTML = '';
+    mensaje.style.display = 'block'; // mostrar "Cargando..."
+
+    try {
+      // 👇 Aquí hacemos la petición al backend Flask
+        const respuesta = await fetch(`/api/tregistrosgastos?inicio=${inicio}&fin=${fin}`);
+        const datos = await respuesta.json(); // ⬅️ Aquí se convierte el JSON en objeto JS
+    
+        mensaje.style.display = 'none';
+        cuerpo.innerHTML = '';
+
+        if (datos.length === 0) {
+            cuerpo.innerHTML = '<tr><td colspan="5">No se encontraron registros en ese rango.</td></tr>';
+            return;
+        }
+
+      // Insertar filas en la tabla dinámicamente
+        datos.forEach(servicio => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+            <td>${servicio.cod_gas}</td>
+            <td>${servicio.des_gas}</td>
+            <td>${servicio.fec_gas}</td>
+            <td>${servicio.nom_cat}</td>
+            <td>${servicio.monto}</td>
+            <td>
+                <a href="/teditargastos/${servicio.cod_ser}" class="btn btn-warning">Editar</a> |
+                <a href="/tborrargastos/${servicio.cod_ser}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
+            </td>
+            `;
+            cuerpo.appendChild(fila);
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        mensaje.style.display = 'none';
+        cuerpo.innerHTML = '<tr><td colspan="5">Error al obtener los datos.</td></tr>';
+    }
+});
