@@ -1,26 +1,26 @@
 {% extends 'tlayaout.html' %} 
 {% block content %} 
     <h2 class="text-center my-4">Registros de Servicios</h2>
+    <a href="/tformservicios" class="btn btn-primary ms-5">Agregar Nuevo Registro</a><br>
+    <input type="button" value="Mostrar Todo" class="btn ms-5 btn-danger" id="btntodo">
+    <input type="button" value="Mostrar Hoy" class="btn ms-5 btn-danger" id="btnhoy">
+    <form id="formFechas" class="d-flex gap-3 justify-content-center mb-4">
+        <div>
+            <label for="fechaInicio" class="form-label">Desde:</label>
+            <input type="date" id="fechaInicio" class="form-control" required>
+        </div>
+    
+        <div>
+            <label for="fechaFin" class="form-label">Hasta:</label>
+            <input type="date" id="fechaFin" class="form-control" required>
+        </div>
+    
+        <div class="align-self-end">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
     <div class="table-responsive">
-        <a href="/tformservicios" class="btn btn-primary ms-5">Agregar Nuevo Registro</a><br>
-        <input type="button" value="Mostrar Todo" class="btn ms-5 btn-danger" id="btntodo">
-        <input type="button" value="Mostrar Hoy" class="btn ms-5 btn-danger" id="btnhoy">
-        <form id="formFechas" class="d-flex gap-3 justify-content-center mb-4">
-            <div>
-                <label for="fechaInicio" class="form-label">Desde:</label>
-                <input type="date" id="fechaInicio" class="form-control" required>
-            </div>
         
-            <div>
-                <label for="fechaFin" class="form-label">Hasta:</label>
-                <input type="date" id="fechaFin" class="form-control" required>
-            </div>
-        
-            <div class="align-self-end">
-                <button type="submit" class="btn btn-primary">Buscar</button>
-            </div>
-        </form>
-
         <div id="mensajeCarga" class="text-center mb-3" style="display:none;">
             <div class="spinner-border text-primary" role="status"></div>
             <p class="mt-2">Cargando datos...</p>
