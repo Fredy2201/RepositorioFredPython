@@ -925,14 +925,16 @@ def tregistrosservicios():
     conn.row_factory = sqlite3.Row
     c = conn.cursor()
 
-    c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
-              FROM servicios,clientes 
-              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli ORDER BY cod_ser DESC""")
+    c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto, nom_tip_ser, nom_lug_ser, nom_tip_pag
+              FROM servicios,clientes, tip_servicios, lug_ser, pag_ser
+              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli and tip_servicios.cod_tip_ser=servicios.cod_tip_ser and lug_ser.cod_lug_ser=servicios.cod_lug_ser and pag_ser.cod_tip_pag=servicios.tip_pag_ser
+			  ORDER BY cod_ser DESC""")
     datos = c.fetchall()
 
-    c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
-              FROM servicios,clientes 
-              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli and fec_ser= DATE('now', '-5 hours') ORDER BY cod_ser DESC""")
+    c.execute("""SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto, nom_tip_ser, nom_lug_ser, nom_tip_pag
+              FROM servicios,clientes, tip_servicios, lug_ser, pag_ser
+              WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli and tip_servicios.cod_tip_ser=servicios.cod_tip_ser and lug_ser.cod_lug_ser=servicios.cod_lug_ser and pag_ser.cod_tip_pag=servicios.tip_pag_ser and fec_ser= DATE('now', '-5 hours')
+			  ORDER BY cod_ser DESC""")
     datos1 = c.fetchall()
     conn.close()
     return render_template("tregistros_servicios.html", registros=datos, datos1=datos1)
@@ -947,12 +949,25 @@ def api_tregistros_servicios():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT cod_ser,des_ser,fec_ser,clientes.nom_cli,servicios.monto 
-        FROM servicios,clientes
-        WHERE cond_ser=1 and servicios.cod_cli=clientes.cod_cli
-          AND DATE(fec_ser) BETWEEN ? AND ?
-        ORDER BY fec_ser DESC
-    """, (inicio, fin))
+    SELECT 
+        s.cod_ser,
+        s.des_ser,
+        s.fec_ser,
+        c.nom_cli,
+        s.monto,
+        t.nom_tip_ser,
+        l.nom_lug_ser,
+        p.nom_tip_pag
+    FROM servicios s
+    JOIN clientes c ON s.cod_cli = c.cod_cli
+    JOIN tip_servicios t ON s.cod_tip_ser = t.cod_tip_ser
+    JOIN lug_ser l ON s.cod_lug_ser = l.cod_lug_ser
+    JOIN pag_ser p ON s.tip_pag_ser = p.cod_tip_pag
+    WHERE s.cond_ser = 1
+      AND DATE(s.fec_ser) BETWEEN ? AND ?
+    ORDER BY s.fec_ser DESC
+""", (inicio, fin))
+
 
     resultados = [dict(fila) for fila in cursor.fetchall()]
     conn.close()
@@ -968,8 +983,19 @@ def tformservicios():
     
     conn = sqlite3.connect("data1.db")
     c = conn.cursor()
+
     c.execute("SELECT * FROM clientes WHERE cond_cli = 1")
     registro = c.fetchall()
+
+    c.execute("SELECT * FROM tip_servicios WHERE cond_tip_ser = 1")
+    tipser = c.fetchall()
+
+    c.execute("SELECT * FROM lug_ser WHERE cond_lug_ser = 1")
+    lugser = c.fetchall()
+
+    c.execute("SELECT * FROM pag_ser WHERE cond_tip_pag = 1")
+    met = c.fetchall()
+
     conn.close()
 
     if request.method == "POST":
@@ -979,11 +1005,14 @@ def tformservicios():
             fecservicio=request.form["fecservicio"]
             cliente = request.form["cliente"]
             monto=request.form["monto"]
+            tservicio=request.form["tservicio"]
+            lservicio=request.form["lservicio"]
+            mpago=request.form["mpago"]
             cond_ser=1
 
             conn = sqlite3.connect("data1.db")
             c = conn.cursor()
-            c.execute("INSERT INTO servicios (des_ser, fec_ser, cod_cli, monto, cond_ser) VALUES (?, ?, ?, ?, ?)", (descripcion, fecservicio, cliente, monto, cond_ser))
+            c.execute("INSERT INTO servicios (des_ser, fec_ser, cod_cli, monto, cod_tip_ser, cod_lug_ser, tip_pag_ser, cond_ser) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (descripcion, fecservicio, cliente, monto, tservicio, lservicio, mpago, cond_ser))
             conn.commit()
             conn.close()
 
@@ -1000,8 +1029,39 @@ def tformservicios():
             conn.commit()
             conn.close()
 
+        if form_name == "form3":
+            nom_tip=request.form["nomtip"]
+            cond_nomtip=1
+
+            conn = sqlite3.connect("data1.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO tip_servicios (nom_tip_ser, cond_tip_ser) VALUES (?, ?)", (nom_tip, cond_nomtip))
+            conn.commit()
+            conn.close()
+
+        if form_name == "form4":
+            nom_lug=request.form["nomlug"]
+            rec_lug=request.form["reclug"]
+            cond_nomlug=1
+
+            conn = sqlite3.connect("data1.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO lug_ser (nom_lug_ser, rec_lug_ser, cond_lug_ser) VALUES (?, ?, ?)", (nom_lug, rec_lug, cond_nomlug))
+            conn.commit()
+            conn.close()
+
+        if form_name == "form5":
+            nom_met=request.form["nommet"]
+            cond_met=1
+
+            conn = sqlite3.connect("data1.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO pag_ser (nom_tip_pag, cond_tip_pag) VALUES (?, ?)", (nom_met, cond_met))
+            conn.commit()
+            conn.close()
+
             return redirect("/tformservicios")  # Redirigir después de guardar
-    return render_template("tformulario_servicios.html", registros=registro)
+    return render_template("tformulario_servicios.html", registros=registro, tipser=tipser, lugser=lugser, met=met)
 
 @app.route("/teditarservicios/<int:id>", methods=["GET", "POST"])
 def teditarservicios(id):

@@ -35,6 +35,9 @@
                         <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Monto</th>
+                        <th>Tipo de Servicio</th>
+                        <th>Lugar</th>
+                        <th>Pago</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,6 +55,9 @@
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Monto cobrado</th>
+                    <th>Tipo de Servicio</th>
+                    <th>Lugar</th>
+                    <th>Pago</th>
                 </tr>
             </thead>
             {% for r in datos1 %}
@@ -63,6 +69,9 @@
                     <td>{{ r[2] }}</td>
                     <td>{{ r[3] }}</td>
                     <td>{{ r[4] }}</td>
+                    <td>{{ r[5] }}</td>
+                    <td>{{ r[6] }}</td>
+                    <td>{{ r[7] }}</td>
                     <td>
                         <a href="/teditarservicios/{{ r[0] }}" class="btn btn-warning">Editar</a> |
                         <a href="/tborrarservicios/{{ r[0] }}" class="btn btn-danger onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
@@ -80,6 +89,9 @@
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Monto cobrado</th>
+                    <th>Tipo de Servicio</th>
+                    <th>Lugar</th>
+                    <th>Pago</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,6 +103,9 @@
                     <td>{{ r[2] }}</td>
                     <td>{{ r[3] }}</td>
                     <td>{{ r[4] }}</td>
+                    <td>{{ r[5] }}</td>
+                    <td>{{ r[6] }}</td>
+                    <td>{{ r[7] }}</td>
                     <td>
                         <a href="/teditarservicios/{{ r[0] }}" class="btn btn-warning">Editar</a> |
                         <a href="/tborrarservicios/{{ r[0] }}" class="btn btn-danger onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>

@@ -156,6 +156,9 @@ document.getElementById('formFechas')?.addEventListener('submit', async (e) => {
             <td>${servicio.fec_ser}</td>
             <td>${servicio.nom_cli}</td>
             <td>${servicio.monto}</td>
+            <td>${servicio.nom_tip_ser}</td>
+            <td>${servicio.nom_lug_ser}</td>
+            <td>${servicio.nom_tip_pag}</td>
             <td>
                 <a href="/teditarservicios/${servicio.cod_ser}" class="btn btn-warning">Editar</a> |
                 <a href="/tborrarservicios/${servicio.cod_ser}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de borrar este registro?');">Borrar</a>
