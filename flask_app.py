@@ -1068,6 +1068,8 @@ def tformservicios():
         
     return render_template("tformulario_servicios.html", registros=registro, tipser=tipser, lugser=lugser, met=met)
 
+
+
 @app.route("/teditarservicios/<int:id>", methods=["GET", "POST"])
 def teditarservicios(id):
     if 'usuario' not in session:
@@ -1119,7 +1121,220 @@ def tborrarservicios(id):
     conn.close()
     return redirect("/tregistrosservicios")
 
+#AQUI ESTA EL CODIGO PARA TIPOS DE SERVICIOS
 
+@app.route("/ttipo_servicios", methods=["GET", "POST"])
+def ttipo_servicios():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("""SELECT * 
+            FROM tip_servicios 
+            WHERE cond_tip_ser=1 ORDER BY nom_tip_ser""")
+    datos = c.fetchall()
+    conn.close()
+
+    if request.method == "POST":
+        nom = request.form["nom"]
+        cond_tipser=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO tip_servicios (nom_tip_ser, cond_tip_ser) VALUES (?, ?)", (nom, cond_tipser))
+        conn.commit()
+        conn.close()
+
+        return redirect("/ttipo_servicios") 
+    return render_template("ttipo_servicios.html", datos=datos)
+
+@app.route("/teditartiposervicios/<int:id>", methods=["GET", "POST"])
+def teditartiposervicios(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == "POST":
+        # Procesar actualización
+        nom=request.form["nom"]
+        cond_tip=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("""
+            UPDATE tip_servicios
+            SET nom_tip_ser = ?, cond_tip_ser = ?
+            WHERE cod_tip_ser = ?
+        """, (nom, cond_tip, id))
+        conn.commit()
+        conn.close()
+        return redirect("/ttipo_servicios")
+     # Si es GET, mostrar datos actuales
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM tip_servicios WHERE cod_tip_ser = ? and cond_tip_ser=1", (id,))
+    registro = c.fetchone()
+    conn.close()
+
+    return render_template("teditartiposervicios.html", registro=registro)
+
+@app.route("/tborrartiposervicios/<int:id>")
+def tborrartiposervicios(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("UPDATE tip_servicios SET cond_tip_ser = 0 WHERE cod_tip_ser = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect("/ttipo_servicios")
+
+#HASTA AQUI ES EL CODIGO
+
+#AQUI ESTA EL CODIGO PARA lugar DE SERVICIOS
+
+@app.route("/tlugar_servicios", methods=["GET", "POST"])
+def tlugar_servicios():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("""SELECT * 
+            FROM lug_ser 
+            WHERE cond_lug_ser=1 ORDER BY nom_lug_ser""")
+    datos = c.fetchall()
+    conn.close()
+
+    if request.method == "POST":
+        nom = request.form["nom"]
+        rec=request.form["rec"]
+        cond_lugser=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO lug_ser (nom_lug_ser, rec_lug_ser, cond_lug_ser) VALUES (?, ?, ?)", (nom, rec, cond_lugser))
+        conn.commit()
+        conn.close()
+
+        return redirect("/tlugar_servicios") 
+    return render_template("tlugar_servicios.html", datos=datos)
+
+@app.route("/teditarlugarservicios/<int:id>", methods=["GET", "POST"])
+def teditarlugarservicios(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == "POST":
+        # Procesar actualización
+        nom=request.form["nom"]
+        rec=request.form["rec"]
+        cond_tip=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("""
+            UPDATE lug_ser
+            SET nom_lug_ser = ?, rec_lug_ser=?, cond_lug_ser = ?
+            WHERE cod_lug_ser = ?
+        """, (nom, rec, cond_tip, id))
+        conn.commit()
+        conn.close()
+        return redirect("/tlugar_servicios")
+     # Si es GET, mostrar datos actuales
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM lug_ser WHERE cod_lug_ser = ? and cond_lug_ser=1", (id,))
+    registro = c.fetchone()
+    conn.close()
+
+    return render_template("teditarlugarservicios.html", registro=registro)
+
+@app.route("/tborrarlugarservicios/<int:id>")
+def tborrarlugarservicios(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("UPDATE lug_ser SET cond_lug_ser = 0 WHERE cod_lug_ser = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect("/tlugar_servicios")
+
+#HASTA AQUI ES EL CODIGO
+
+#AQUI ESTA EL CODIGO PARA lugar DE SERVICIOS
+
+@app.route("/tmetodos_pago", methods=["GET", "POST"])
+def tmetodos_pago():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("""SELECT * 
+            FROM pag_ser
+            WHERE cond_tip_pag=1 ORDER BY nom_tip_pag""")
+    datos = c.fetchall()
+    conn.close()
+
+    if request.method == "POST":
+        nom = request.form["nom"]
+        cond_tippag=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO pag_ser (nom_tip_pag, cond_tip_pag) VALUES (?, ?)", (nom, cond_tippag))
+        conn.commit()
+        conn.close()
+
+        return redirect("/tmetodos_pago") 
+    return render_template("tmetodos_pago.html", datos=datos)
+
+@app.route("/teditarmetodospago/<int:id>", methods=["GET", "POST"])
+def teditarmetodospago(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == "POST":
+        # Procesar actualización
+        nom=request.form["nom"]
+        cond_tip=1
+
+        conn = sqlite3.connect("data1.db")
+        c = conn.cursor()
+        c.execute("""
+            UPDATE pag_ser
+            SET nom_tip_pag = ?, cond_tip_pag = ?
+            WHERE cod_tip_pag = ?
+        """, (nom, cond_tip, id))
+        conn.commit()
+        conn.close()
+        return redirect("/tmetodos_pago")
+     # Si es GET, mostrar datos actuales
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM pag_ser WHERE cod_tip_pag = ? and cond_tip_pag=1", (id,))
+    registro = c.fetchone()
+    conn.close()
+
+    return render_template("teditarmetodospago.html", registro=registro)
+
+@app.route("/tborrarmetodospago/<int:id>")
+def tborrarmetodospago(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+    c.execute("UPDATE pag_ser SET cond_tip_pag = 0 WHERE cod_tip_pag = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect("/tmetodos_pago")
+
+#HASTA AQUI ES EL CODIGO
 
 
 @app.route("/tregistrosclientes")
