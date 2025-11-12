@@ -1016,7 +1016,8 @@ def tformservicios():
             conn.commit()
             conn.close()
 
-            return redirect("/tregistrosservicios")  # Redirigir después de guardar
+            return redirect("/tformservicios")   # Redirigir después de guardar
+        
         if form_name == "form2":
             cliente=request.form["cliente"]
             phone=request.form["phone"]
@@ -1028,6 +1029,7 @@ def tformservicios():
             c.execute("INSERT INTO clientes (nom_cli, tel_cli, nom_con, cond_cli) VALUES (?, ?, ?, ?)", (cliente, phone, nomcont, cond_cli))
             conn.commit()
             conn.close()
+            return redirect("/tformservicios") 
 
         if form_name == "form3":
             nom_tip=request.form["nomtip"]
@@ -1038,6 +1040,7 @@ def tformservicios():
             c.execute("INSERT INTO tip_servicios (nom_tip_ser, cond_tip_ser) VALUES (?, ?)", (nom_tip, cond_nomtip))
             conn.commit()
             conn.close()
+            return redirect("/tformservicios") 
 
         if form_name == "form4":
             nom_lug=request.form["nomlug"]
@@ -1049,6 +1052,7 @@ def tformservicios():
             c.execute("INSERT INTO lug_ser (nom_lug_ser, rec_lug_ser, cond_lug_ser) VALUES (?, ?, ?)", (nom_lug, rec_lug, cond_nomlug))
             conn.commit()
             conn.close()
+            return redirect("/tformservicios") 
 
         if form_name == "form5":
             nom_met=request.form["nommet"]
@@ -1061,6 +1065,7 @@ def tformservicios():
             conn.close()
 
             return redirect("/tformservicios")  # Redirigir después de guardar
+        
     return render_template("tformulario_servicios.html", registros=registro, tipser=tipser, lugser=lugser, met=met)
 
 @app.route("/teditarservicios/<int:id>", methods=["GET", "POST"])
