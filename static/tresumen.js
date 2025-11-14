@@ -77,8 +77,8 @@ async function cargarChart2(){
     const datos = await response.json();
 
     const meses=datos.map(d =>d.mes);
-    const ingresos=datos.map(d =>d.ingresos);
-    const egresos = datos.map(d => -Math.abs(d.egresos));
+    const ingresos = datos.map(d => Number(parseFloat(d.ingresos).toFixed(1)));
+    const egresos = datos.map(d => -Number(Math.abs(parseFloat(d.egresos)).toFixed(1)));
     const ganancia = datos.map(d => Number(d.ganancia.toFixed(1)));
 
 
