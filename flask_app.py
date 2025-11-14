@@ -1336,7 +1336,95 @@ def tborrarmetodospago(id):
 
 #HASTA AQUI ES EL CODIGO
 
+#ESTA PARTE SIRVE PARA LOS GRAFICOS
+#-----------------------------------
 
+@app.route("/datos_tresumen")
+def datos_tresumen():
+    # ✅ 1. Obtener el mes desde el parámetro GET (ej: "2025-11")
+    mes = request.args.get("mes")
+
+    conn = sqlite3.connect("data1.db")
+    c = conn.cursor()
+
+    # ✅ 2. Si el usuario no eligió mes, usamos el actual
+    if mes:
+        c.execute("""
+            SELECT nom_cat, SUM(monto)
+            FROM gastos, cat_gas  
+            WHERE gastos.cod_cat = cat_gas.cod_cat 
+            AND cond_gas = 1 
+            AND strftime('%Y-%m', fec_gas) = ?
+            GROUP BY gastos.cod_cat
+        """, (mes,))
+    else:
+        c.execute("""
+            SELECT nom_cat, SUM(monto)
+            FROM gastos, cat_gas  
+            WHERE gastos.cod_cat = cat_gas.cod_cat 
+            AND cond_gas = 1 
+            AND strftime('%Y-%m', fec_gas) = strftime('%Y-%m', 'now')
+            GROUP BY gastos.cod_cat
+        """)
+
+    filas = c.fetchall()
+    conn.close()
+
+    # ✅ 3. Convertir el resultado a formato JSON
+    datos = [{"name": fila[0], "value": fila[1]} for fila in filas]
+    return jsonify(datos)
+
+#--------------------------------------------------------------------------------------------------------
+
+@app.route("/api/chart2")
+def api_chart2():
+    conn = sqlite3.connect("data1.db")
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT mes,
+            SUM(ingreso) AS ingresos,
+            SUM(egreso) AS egresos
+        FROM (
+            -- Ingresos por mes
+            SELECT strftime('%Y-%m', fec_ser) AS mes,
+                SUM(monto) AS ingreso,
+                0 AS egreso
+            FROM servicios
+            WHERE cond_ser = 1
+            GROUP BY mes
+
+            UNION ALL
+
+            -- Egresos por mes
+            SELECT strftime('%Y-%m', fec_gas) AS mes,
+                0 AS ingreso,
+                SUM(monto) AS egreso
+            FROM gastos
+            WHERE cond_gas = 1
+            GROUP BY mes
+        )
+        GROUP BY mes
+        ORDER BY mes;
+    """)
+
+    filas = c.fetchall()
+    conn.close()
+
+    datos = []
+    for mes, ingresos, egresos in filas:
+        ganancia = ingresos - egresos
+        datos.append({
+            "mes": mes,
+            "ingresos": ingresos,
+            "egresos": egresos,
+            "ganancia": ganancia
+        })
+
+    return jsonify(datos)
+#-----------------------------------------------------------------------------------------------------
+#AQUI TERMINA EL CODIGO PARA LOS GRAFICOS 
 @app.route("/tregistrosclientes")
 def tregistrosclientes():
     if 'usuario' not in session:
@@ -1776,40 +1864,6 @@ def tresumen():
     conn.close()
     return render_template("tresumen.html", datos=datos)
 
-@app.route("/datos_tresumen")
-def datos_tresumen():
-    # ✅ 1. Obtener el mes desde el parámetro GET (ej: "2025-11")
-    mes = request.args.get("mes")
-
-    conn = sqlite3.connect("data1.db")
-    c = conn.cursor()
-
-    # ✅ 2. Si el usuario no eligió mes, usamos el actual
-    if mes:
-        c.execute("""
-            SELECT nom_cat, SUM(monto)
-            FROM gastos, cat_gas  
-            WHERE gastos.cod_cat = cat_gas.cod_cat 
-            AND cond_gas = 1 
-            AND strftime('%Y-%m', fec_gas) = ?
-            GROUP BY gastos.cod_cat
-        """, (mes,))
-    else:
-        c.execute("""
-            SELECT nom_cat, SUM(monto)
-            FROM gastos, cat_gas  
-            WHERE gastos.cod_cat = cat_gas.cod_cat 
-            AND cond_gas = 1 
-            AND strftime('%Y-%m', fec_gas) = strftime('%Y-%m', 'now')
-            GROUP BY gastos.cod_cat
-        """)
-
-    filas = c.fetchall()
-    conn.close()
-
-    # ✅ 3. Convertir el resultado a formato JSON
-    datos = [{"name": fila[0], "value": fila[1]} for fila in filas]
-    return jsonify(datos)
 
 #----------------------------------------------------------------------------------------------------------
 #TRABAJANDO CON EL LOGIN

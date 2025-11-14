@@ -66,3 +66,59 @@ document.getElementById('mesSeleccionado').addEventListener('change', async (e) 
     const nuevaConfig = await getOptionChart1(mesElegido);
     chartInstance.setOption(nuevaConfig, true); // 🔁 Actualiza el gráfico sin recargar la página
 });
+
+
+// DESDE AQUI EJECUTAMOS EL CODIGO PARA EL CHAR2
+async function cargarChart2(){
+    var chartDom2 = document.getElementById('chart2');
+    var myChart2 = echarts.init(chartDom2);
+
+    const response = await fetch("/api/chart2");
+    const datos = await response.json();
+
+    const meses=datos.map(d =>d.mes);
+    const ingresos=datos.map(d =>d.ingresos);
+    const egresos = datos.map(d => -Math.abs(d.egresos));
+    const ganancia = datos.map(d => Number(d.ganancia.toFixed(1)));
+
+
+    var option2 = {
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        legend: { data: ['Profit', 'Expenses', 'Income'] },
+        xAxis: [{ type: 'value' }],
+        yAxis: [{
+            type: 'category',
+            axisTick: { show: false },
+            data: meses
+        }],
+        series: [
+            {
+                name: 'Ganancia',
+                type: 'bar',
+                label: { show: true, position: 'inside' },
+                emphasis: { focus: 'series' },
+                data: ganancia
+            },
+            {
+                name: 'Ingresos',
+                type: 'bar',
+                stack: 'Total',
+                label: { show: true },
+                emphasis: { focus: 'series' },
+                data: ingresos
+            },
+            {
+                name: 'Egresos',
+                type: 'bar',
+                stack: 'Total',
+                label: { show: true, position: 'left' },
+                emphasis: { focus: 'series' },
+                data: egresos
+            }
+        ]
+    };
+
+    myChart2.setOption(option2);
+}
+cargarChart2();
+//AQUI CULMINA EL CODIGO
